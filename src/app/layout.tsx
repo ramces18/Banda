@@ -4,8 +4,8 @@ import { AuthProvider } from '@/providers/auth-provider';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'Banda Manager',
-  description: 'Sistema de gestión para bandas musicales.',
+  title: 'La banda del IDI',
+  description: 'Sistema de gestión para La banda del IDI.',
 };
 
 export default function RootLayout({
