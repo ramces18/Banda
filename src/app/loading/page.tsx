@@ -11,19 +11,15 @@ export default function LoadingPage() {
   const { user, loading } = useAuth();
 
   useEffect(() => {
-    // If auth state is resolved and there's no user, go to login.
-    if (!loading && !user) {
+    if (loading) {
+      return; // Espera a que termine la carga del estado de autenticación
+    }
+
+    if (user) {
+      router.replace("/dashboard");
+    } else {
       router.replace("/");
-      return;
     }
-    // If auth state is resolved and there is a user, go to dashboard.
-    if (!loading && user) {
-      const timer = setTimeout(() => {
-         router.replace("/dashboard");
-      }, 1500); // Give some time for a better UX
-      return () => clearTimeout(timer);
-    }
-    // If still loading, just wait.
   }, [user, loading, router]);
 
   return (
