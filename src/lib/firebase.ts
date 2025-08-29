@@ -1,0 +1,20 @@
+import { getApp, getApps, initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD6JnK3wAMmSUgJoaiYORVFIhX0mXAmLyI",
+  authDomain: "banda-b4fc5.firebaseapp.com",
+  projectId: "banda-b4fc5",
+  storageBucket: "banda-b4fc5.appspot.com",
+  messagingSenderId: "71298040897",
+  appId: "1:71298040897:web:e3ac815f127a37df4572c0",
+  measurementId: "G-KWMV6PNDFT"
+};
+
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+export { app, auth, db };
