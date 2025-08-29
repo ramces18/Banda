@@ -62,17 +62,17 @@ export default function LoginPage() {
       toast({
         variant: "destructive",
         title: "Error de inicio de sesión",
-        description: error,
+        description: "Usuario o contraseña incorrectos.",
       });
       setLoading(false);
     }
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-4">
-      <div className="flex flex-col items-center justify-center space-y-6">
+    <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-background">
+      <div className="flex flex-col items-center justify-center space-y-6 w-full max-w-sm">
         <Logo className="mb-4" />
-        <Card className="w-full max-w-sm">
+        <Card className="w-full">
           <CardHeader>
             <CardTitle className="text-2xl">Iniciar Sesión</CardTitle>
             <CardDescription>
@@ -119,14 +119,6 @@ export default function LoginPage() {
                 Acceder
               </Button>
             </form>
-             <Alert className="mt-4">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Usuarios de Demostración</AlertTitle>
-                <AlertDescription>
-                  <p><b>Líder:</b> IDI_Jose_J._Lider / 578990</p>
-                  <p><b>Dirigente:</b> IDI_Gerard_R. / 180511</p>
-                </AlertDescription>
-            </Alert>
           </CardContent>
         </Card>
       </div>
