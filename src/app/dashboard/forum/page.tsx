@@ -93,7 +93,7 @@ export default function ForumPage() {
                         </TableCell>
                         <TableCell className="hidden sm:table-cell text-center">{topic.replyCount}</TableCell>
                         <TableCell className="text-right">
-                             {formatDistanceToNow(topic.lastReplyAt.toDate(), { addSuffix: true, locale: es })}
+                             {topic.lastReplyAt ? formatDistanceToNow(topic.lastReplyAt.toDate(), { addSuffix: true, locale: es }) : "-"}
                         </TableCell>
                     </TableRow>
                     ))}
