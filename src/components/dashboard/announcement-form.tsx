@@ -26,6 +26,7 @@ const formSchema = z.object({
   titulo: z.string().min(5, "El título debe tener al menos 5 caracteres."),
   contenido: z.string().min(10, "El contenido debe tener al menos 10 caracteres."),
   importancia: z.enum(["baja", "normal", "alta"]),
+  imageUrl: z.string().url("Debe ser una URL de imagen válida.").optional().or(z.literal("")),
 });
 
 interface AnnouncementFormProps {
@@ -42,6 +43,7 @@ export function AnnouncementForm({ announcement, onFinished }: AnnouncementFormP
       titulo: announcement?.titulo || "",
       contenido: announcement?.contenido || "",
       importancia: announcement?.importancia || "normal",
+      imageUrl: announcement?.imageUrl || "",
     },
   });
 
@@ -99,6 +101,19 @@ export function AnnouncementForm({ announcement, onFinished }: AnnouncementFormP
               <FormLabel>Contenido</FormLabel>
               <FormControl>
                 <Textarea placeholder="Escribe el contenido del anuncio aquí..." {...field} rows={5} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="imageUrl"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>URL de la Imagen (Opcional)</FormLabel>
+              <FormControl>
+                <Input placeholder="https://ejemplo.com/imagen.jpg" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

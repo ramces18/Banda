@@ -3,7 +3,7 @@
 import { useAuth } from "@/hooks/use-auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { LogOut, Menu } from "lucide-react";
+import { LogOut, Menu, MessageSquare, Music } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import Link from "next/link";
 import { Home, Megaphone, Users } from "lucide-react";
@@ -13,6 +13,8 @@ import { Logo } from "../logo";
 const navItems = [
   { href: "/dashboard", icon: Home, label: "Dashboard", roles: ["lider", "dirigente", "miembro"] },
   { href: "/dashboard/announcements", icon: Megaphone, label: "Anuncios", roles: ["lider", "dirigente", "miembro"] },
+  { href: "/dashboard/scores", icon: Music, label: "Partituras", roles: ["lider", "dirigente", "miembro"] },
+  { href: "/dashboard/forum", icon: MessageSquare, label: "Foro", roles: ["lider", "dirigente", "miembro"] },
   { href: "/dashboard/users", icon: Users, label: "Usuarios", roles: ["lider"] },
 ];
 
@@ -43,8 +45,8 @@ export function Header() {
           </SheetTrigger>
           <SheetContent side="left" className="flex flex-col p-0">
             <SheetHeader className="p-4 border-b">
-              <SheetTitle>
-                <Logo />
+               <SheetTitle>
+                 <Logo />
               </SheetTitle>
             </SheetHeader>
             <nav className="flex-1 p-4 space-y-2">
@@ -53,7 +55,7 @@ export function Header() {
                   <Button
                     key={item.href}
                     asChild
-                    variant={pathname === item.href ? "secondary" : "ghost"}
+                    variant={pathname.startsWith(item.href) ? "secondary" : "ghost"}
                     className="w-full justify-start"
                   >
                     <Link href={item.href}>

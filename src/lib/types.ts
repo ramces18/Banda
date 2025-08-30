@@ -16,4 +16,5 @@ export interface Announcement {
   autor: string; // UID of author
   autorNombre?: string; // To display author name
   importancia: 'normal' | 'alta' | 'baja';
+  imageUrl?: string; // Optional image for the announcement
 }

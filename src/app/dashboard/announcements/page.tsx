@@ -1,21 +1,30 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { collection, onSnapshot, query, orderBy, getDoc, doc } from "firebase/firestore";
+import { collection, onSnapshot, query, orderBy, getDoc, doc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/hooks/use-auth";
 import type { Announcement, BandUser } from "@/lib/types";
 import { AnnouncementCard } from "@/components/dashboard/announcement-card";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, Loader2 } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { AnnouncementForm } from "@/components/dashboard/announcement-form";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { useToast } from "@/hooks/use-toast";
 
 export default function AnnouncementsPage() {
   const { bandUser } = useAuth();
+  const { toast } = useToast();
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [loading, setLoading] = useState(true);
+  
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingAnnouncement, setEditingAnnouncement] = useState<Announcement | null>(null);
+  
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [deletingAnnouncementId, setDeletingAnnouncementId] = useState<string | null>(null);
+
 
   useEffect(() => {
     const q = query(collection(db, "announcements"), orderBy("fecha", "desc"));
@@ -28,7 +37,6 @@ export default function AnnouncementsPage() {
         const data = docSnapshot.data();
         const announcement: Announcement = { id: docSnapshot.id, ...data } as Announcement;
         
-        // Fetch author name
         if (data.autor) {
           const authorDoc = await getDoc(doc(db, "users", data.autor));
           if (authorDoc.exists()) {
@@ -63,42 +71,104 @@ export default function AnnouncementsPage() {
     });
   }, [announcements]);
 
+  const handleCreateClick = () => {
+    setEditingAnnouncement(null);
+    setIsFormOpen(true);
+  };
+
+  const handleEditClick = (announcement: Announcement) => {
+    setEditingAnnouncement(announcement);
+    setIsFormOpen(true);
+  };
+
+  const handleDeleteClick = (id: string) => {
+    setDeletingAnnouncementId(id);
+    setIsDeleteDialogOpen(true);
+  }
+
+  const confirmDelete = async () => {
+    if (!deletingAnnouncementId) return;
+    try {
+      await deleteDoc(doc(db, "announcements", deletingAnnouncementId));
+      toast({ description: "Anuncio eliminado correctamente." });
+    } catch (error) {
+      toast({ variant: "destructive", description: "No se pudo eliminar el anuncio." });
+      console.error("Error deleting announcement:", error);
+    } finally {
+      setIsDeleteDialogOpen(false);
+      setDeletingAnnouncementId(null);
+    }
+  }
+
+  const handleFormFinished = () => {
+    setIsFormOpen(false);
+    setEditingAnnouncement(null);
+  };
+
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Anuncios</h1>
         {canManage && (
-          <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-            <DialogTrigger asChild>
-              <Button>
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Crear Anuncio
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle>Crear Nuevo Anuncio</DialogTitle>
-              </DialogHeader>
-              <AnnouncementForm onFinished={() => setIsFormOpen(false)} />
-            </DialogContent>
-          </Dialog>
+          <Button onClick={handleCreateClick}>
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Crear Anuncio
+          </Button>
         )}
       </div>
+      
+      <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>{editingAnnouncement ? "Editar Anuncio" : "Crear Nuevo Anuncio"}</DialogTitle>
+             <DialogDescription>
+              {editingAnnouncement ? "Modifica los detalles y guarda los cambios." : "Rellena el formulario para publicar un nuevo anuncio."}
+            </DialogDescription>
+          </DialogHeader>
+          <AnnouncementForm 
+            onFinished={handleFormFinished}
+            announcement={editingAnnouncement} 
+          />
+        </DialogContent>
+      </Dialog>
+      
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>¿Estás seguro de que quieres eliminar?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta acción no se puede deshacer. El anuncio se eliminará permanentemente.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete}>Eliminar</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
 
       {loading ? (
         <div className="flex justify-center items-center py-10">
           <Loader2 className="h-8 w-8 animate-spin" />
         </div>
       ) : announcements.length > 0 ? (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {sortedAnnouncements.map((announcement) => (
-            <AnnouncementCard key={announcement.id} announcement={announcement} />
+            <AnnouncementCard 
+                key={announcement.id} 
+                announcement={announcement}
+                canManage={canManage}
+                onEdit={handleEditClick}
+                onDelete={handleDeleteClick}
+            />
           ))}
         </div>
       ) : (
         <div className="text-center py-10 border-2 border-dashed rounded-lg">
           <p className="text-muted-foreground">No hay anuncios publicados todavía.</p>
+           {canManage && <Button onClick={handleCreateClick} className="mt-4">Crear el primer anuncio</Button>}
         </div>
       )}
     </div>

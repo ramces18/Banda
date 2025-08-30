@@ -1,16 +1,20 @@
 "use client";
 
-import type { Announcement } from "@/lib/types";
+import type { Announcement, BandUser } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import Image from "next/image";
+import Link from "next/link";
+import { Button } from "../ui/button";
+import { Pencil, Trash2 } from "lucide-react";
 
 interface AnnouncementCardProps {
   announcement: Announcement;
+  canManage: boolean;
   onEdit: (announcement: Announcement) => void;
   onDelete: (id: string) => void;
-  canManage: boolean;
   className?: string;
 }
 
@@ -20,15 +24,30 @@ const importanceMap = {
   baja: { label: "Baja", variant: "outline" as const },
 };
 
-export function AnnouncementCard({ announcement, className }: {announcement: Announcement, className?: string}) {
-  const { titulo, contenido, fecha, importancia, autorNombre } = announcement;
+export function AnnouncementCard({ announcement, canManage, onEdit, onDelete, className }: AnnouncementCardProps) {
+  const { id, titulo, contenido, fecha, importancia, autorNombre, imageUrl } = announcement;
   const importanceInfo = importanceMap[importancia] || importanceMap.normal;
 
   return (
-    <Card className={`flex flex-col ${className}`}>
+    <Card className={`flex flex-col overflow-hidden ${className}`}>
+        {imageUrl && (
+            <Link href={`/dashboard/announcements/${id}`} className="block overflow-hidden">
+                <Image
+                    src={imageUrl}
+                    alt={titulo}
+                    width={400}
+                    height={200}
+                    className="w-full h-40 object-cover hover:scale-105 transition-transform duration-300"
+                />
+            </Link>
+        )}
       <CardHeader>
         <div className="flex justify-between items-start">
-            <CardTitle>{titulo}</CardTitle>
+            <CardTitle className="hover:text-primary transition-colors">
+                 <Link href={`/dashboard/announcements/${id}`}>
+                    {titulo}
+                </Link>
+            </CardTitle>
             <Badge variant={importanceInfo.variant}>{importanceInfo.label}</Badge>
         </div>
         <CardDescription>
@@ -36,8 +55,23 @@ export function AnnouncementCard({ announcement, className }: {announcement: Ann
         </CardDescription>
       </CardHeader>
       <CardContent className="flex-grow">
-        <p className="text-sm text-muted-foreground whitespace-pre-wrap">{contenido}</p>
+        <p className="text-sm text-muted-foreground line-clamp-3">{contenido}</p>
       </CardContent>
+       <CardFooter className="flex justify-end gap-2">
+            {canManage && (
+            <>
+                <Button variant="outline" size="sm" onClick={() => onEdit(announcement)}>
+                    <Pencil className="mr-2 h-4 w-4" /> Editar
+                </Button>
+                <Button variant="destructive" size="sm" onClick={() => onDelete(id)}>
+                    <Trash2 className="mr-2 h-4 w-4" /> Eliminar
+                </Button>
+            </>
+            )}
+            <Button asChild variant="secondary" size="sm">
+                <Link href={`/dashboard/announcements/${id}`}>Leer más</Link>
+            </Button>
+      </CardFooter>
     </Card>
   );
 }

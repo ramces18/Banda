@@ -3,13 +3,15 @@
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
-import { Home, LogOut, Megaphone, Users } from "lucide-react";
+import { Home, LogOut, Megaphone, Users, Music, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const navItems = [
   { href: "/dashboard", icon: Home, label: "Dashboard", roles: ["lider", "dirigente", "miembro"] },
   { href: "/dashboard/announcements", icon: Megaphone, label: "Anuncios", roles: ["lider", "dirigente", "miembro"] },
+  { href: "/dashboard/scores", icon: Music, label: "Partituras", roles: ["lider", "dirigente", "miembro"] },
+  { href: "/dashboard/forum", icon: MessageSquare, label: "Foro", roles: ["lider", "dirigente", "miembro"] },
   { href: "/dashboard/users", icon: Users, label: "Usuarios", roles: ["lider"] },
 ];
 
@@ -30,7 +32,7 @@ export function Sidebar() {
             <Button
               key={item.href}
               asChild
-              variant={pathname === item.href ? "secondary" : "ghost"}
+              variant={pathname.startsWith(item.href) ? "secondary" : "ghost"}
               className="w-full justify-start"
             >
               <Link href={item.href}>
