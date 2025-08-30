@@ -16,18 +16,20 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { UserForm } from "@/components/dashboard/user-form";
-import { Loader2, ShieldAlert } from "lucide-react";
+import { Loader2, ShieldAlert, PlusCircle } from "lucide-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import { CreateUserForm } from "@/components/dashboard/create-user-form";
 
 export default function UsersPage() {
   const { bandUser } = useAuth();
   const [users, setUsers] = useState<BandUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedUser, setSelectedUser] = useState<BandUser | null>(null);
-  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isEditFormOpen, setIsEditFormOpen] = useState(false);
+  const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
 
   useEffect(() => {
     if (bandUser?.rol !== "lider") {
@@ -53,13 +55,17 @@ export default function UsersPage() {
 
   const handleEditClick = (user: BandUser) => {
     setSelectedUser(user);
-    setIsFormOpen(true);
+    setIsEditFormOpen(true);
   };
   
-  const handleFormFinished = () => {
-    setIsFormOpen(false);
+  const handleEditFormFinished = () => {
+    setIsEditFormOpen(false);
     setSelectedUser(null);
   };
+
+  const handleCreateFormFinished = () => {
+    setIsCreateFormOpen(false);
+  }
 
   const roleVariantMap: { [key: string]: "default" | "secondary" | "destructive" } = {
     lider: "destructive",
@@ -83,7 +89,23 @@ export default function UsersPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Gestionar Usuarios</h1>
+       <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold">Gestionar Usuarios</h1>
+        <Dialog open={isCreateFormOpen} onOpenChange={setIsCreateFormOpen}>
+          <DialogTrigger asChild>
+             <Button>
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Crear Usuario
+              </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Crear Nuevo Usuario</DialogTitle>
+            </DialogHeader>
+            <CreateUserForm onFinished={handleCreateFormFinished} />
+          </DialogContent>
+        </Dialog>
+      </div>
       <Card>
         <CardHeader>
           <CardTitle>Lista de Miembros</CardTitle>
@@ -122,12 +144,12 @@ export default function UsersPage() {
         </CardContent>
       </Card>
 
-      <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+      <Dialog open={isEditFormOpen} onOpenChange={setIsEditFormOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Editar Usuario</DialogTitle>
           </DialogHeader>
-          {selectedUser && <UserForm user={selectedUser} onFinished={handleFormFinished} />}
+          {selectedUser && <UserForm user={selectedUser} onFinished={handleEditFormFinished} />}
         </DialogContent>
       </Dialog>
     </div>
