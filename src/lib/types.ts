@@ -38,3 +38,13 @@ export interface ForumPost {
     content: string;
     createdAt: Timestamp;
 }
+
+export interface Report {
+    id?: string;
+    type: 'topic' | 'post';
+    contentId: string; // ID of the topic or post
+    contentParentId?: string; // topicId if it's a post
+    reporterId: string;
+    reporterName: string;
+    reportedAt: Timestamp;
+}

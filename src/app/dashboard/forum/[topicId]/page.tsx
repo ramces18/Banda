@@ -1,29 +1,37 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { collection, doc, getDoc, onSnapshot, orderBy, query } from "firebase/firestore";
+import { collection, doc, onSnapshot, orderBy, query, deleteDoc, runTransaction } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import type { ForumPost, ForumTopic } from "@/lib/types";
+import { useAuth } from "@/hooks/use-auth";
 import { Loader2, ArrowLeft, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { PostCard } from "@/components/forum/post-card";
 import { NewReplyForm } from "@/components/forum/new-reply-form";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { useToast } from "@/hooks/use-toast";
+import { handleReport } from "@/lib/reports";
 
 export default function TopicDetailPage() {
   const { topicId } = useParams();
   const router = useRouter();
+  const { bandUser } = useAuth();
+  const { toast } = useToast();
 
   const [topic, setTopic] = useState<ForumTopic | null>(null);
   const [posts, setPosts] = useState<ForumPost[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [deletingPost, setDeletingPost] = useState<ForumPost | null>(null);
+
   useEffect(() => {
     if (typeof topicId !== "string") return;
 
-    // Fetch topic details
     const topicRef = doc(db, "forumTopics", topicId);
     const unsubscribeTopic = onSnapshot(topicRef, (docSnap) => {
       if (docSnap.exists()) {
@@ -34,7 +42,6 @@ export default function TopicDetailPage() {
       }
     });
 
-    // Fetch posts for the topic
     const postsQuery = query(collection(db, `forumTopics/${topicId}/posts`), orderBy("createdAt", "asc"));
     const unsubscribePosts = onSnapshot(postsQuery, (querySnapshot) => {
       const postsData: ForumPost[] = [];
@@ -53,6 +60,60 @@ export default function TopicDetailPage() {
       unsubscribePosts();
     };
   }, [topicId, router]);
+  
+  const canManage = useMemo(() => {
+    return bandUser?.rol === "lider" || bandUser?.rol === "dirigente";
+  }, [bandUser]);
+
+  const handleDeleteClick = (post: ForumPost) => {
+    setDeletingPost(post);
+    setIsDeleteDialogOpen(true);
+  }
+  
+  const onReport = async (post: ForumPost) => {
+    if (!bandUser) return;
+    await handleReport({
+      type: 'post',
+      contentId: post.id,
+      contentParentId: post.topicId,
+      reporterId: bandUser.id,
+      reporterName: bandUser.nombreCompleto,
+    });
+    toast({ description: "La respuesta ha sido reportada. Gracias por tu colaboración." });
+  }
+
+  const confirmDelete = async () => {
+    if (!deletingPost || typeof topicId !== "string") return;
+
+    const postRef = doc(db, `forumTopics/${topicId}/posts`, deletingPost.id);
+    const topicRef = doc(db, "forumTopics", topicId);
+
+    try {
+        await runTransaction(db, async (transaction) => {
+            const topicDoc = await transaction.get(topicRef);
+            if (!topicDoc.exists()) {
+                throw "¡El tema no existe!";
+            }
+
+            // Delete the post
+            transaction.delete(postRef);
+
+            // Decrement reply count on topic
+            const newReplyCount = Math.max(0, (topicDoc.data().replyCount || 0) - 1);
+            transaction.update(topicRef, {
+                replyCount: newReplyCount
+            });
+        });
+        toast({ description: "Respuesta eliminada correctamente." });
+    } catch (error) {
+        toast({ variant: "destructive", description: "No se pudo eliminar la respuesta." });
+        console.error("Error deleting post:", error);
+    } finally {
+        setIsDeleteDialogOpen(false);
+        setDeletingPost(null);
+    }
+  }
+
 
   if (loading) {
     return (
@@ -63,7 +124,7 @@ export default function TopicDetailPage() {
   }
 
   if (!topic) {
-    return null; // or a not found component
+    return null;
   }
 
   return (
@@ -82,9 +143,30 @@ export default function TopicDetailPage() {
             </p>
        </div>
 
+       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>¿Seguro que quieres eliminar esta respuesta?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta acción no se puede deshacer. La respuesta se eliminará permanentemente.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete}>Eliminar</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
         <div className="space-y-4">
             {posts.map((post) => (
-                <PostCard key={post.id} post={post} />
+                <PostCard 
+                    key={post.id} 
+                    post={post}
+                    canManage={canManage}
+                    onDelete={handleDeleteClick}
+                    onReport={onReport}
+                />
             ))}
         </div>
         
