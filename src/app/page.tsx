@@ -27,22 +27,12 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
-    // Demo users mapping
-    const emailMap: { [key: string]: string } = {
-      "IDI_Jose_J._Lider": "lider@banda.com",
-      "IDI_Gerard_R.": "dirigente@banda.com",
-    };
-    const passwordMap: { [key: string]: string } = {
-        "IDI_Jose_J._Lider": "578990", // Firebase requires 6+ char passwords
-        "IDI_Gerard_R.": "180511",
-      };
-
-    const firebaseEmail = emailMap[email] || email;
-    const firebasePassword = passwordMap[email] || password;
-
+    // NOTE: Firebase Auth expects an email. We will append a dummy domain.
+    // In a real app, you'd collect the user's email directly.
+    const firebaseEmail = email.includes('@') ? email : `${email}@banda.com`;
 
     try {
-      await signInWithEmailAndPassword(auth, firebaseEmail, firebasePassword);
+      await signInWithEmailAndPassword(auth, firebaseEmail, password);
       router.push("/loading");
     } catch (err) {
       if (err instanceof FirebaseError) {
@@ -53,7 +43,7 @@ export default function LoginPage() {
             setError("Usuario o contraseña incorrectos.");
             break;
           default:
-            setError("Ocurrió un error. Por favor, inténtalo de nuevo.");
+             setError("Ocurrió un error. Por favor, inténtalo de nuevo.");
             break;
         }
       } else {
@@ -70,13 +60,15 @@ export default function LoginPage() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-background">
-      <div className="flex flex-col items-center justify-center space-y-6 w-full max-w-sm">
-        <Logo className="mb-4" />
-        <Card className="w-full">
-          <CardHeader>
-            <CardTitle className="text-2xl">Iniciar Sesión</CardTitle>
+       <div className="w-full max-w-md mx-auto">
+        <div className="flex justify-center mb-8">
+          <Logo />
+        </div>
+        <Card className="shadow-2xl">
+          <CardHeader className="text-center">
+            <CardTitle className="text-3xl font-bold">Bienvenido</CardTitle>
             <CardDescription>
-              Ingresa tus credenciales para acceder al sistema.
+              Ingresa tus credenciales para acceder al panel.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -86,11 +78,12 @@ export default function LoginPage() {
                 <Input
                   id="email"
                   type="text"
-                  placeholder="Ej: IDI_Jose_J._Lider"
+                  placeholder="Tu nombre de usuario"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   disabled={loading}
+                  className="text-base"
                 />
               </div>
               <div className="space-y-2">
@@ -103,6 +96,7 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   disabled={loading}
+                   className="text-base"
                 />
               </div>
               {error && (
@@ -112,7 +106,7 @@ export default function LoginPage() {
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
-              <Button type="submit" className="w-full" disabled={loading}>
+              <Button type="submit" className="w-full !mt-6" disabled={loading}>
                 {loading ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : null}
