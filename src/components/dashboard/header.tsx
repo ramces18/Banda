@@ -41,7 +41,7 @@ export function Header() {
               <Menu className="h-6 w-6" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="flex flex-col">
+          <SheetContent side="left" className="flex flex-col p-0">
             <div className="p-4 border-b">
               <Logo />
             </div>
