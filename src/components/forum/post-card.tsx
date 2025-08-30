@@ -5,7 +5,7 @@ import type { ForumPost } from "@/lib/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { format } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
 import { Trash2, Flag } from "lucide-react";
 import { doc, getDoc } from "firebase/firestore";
@@ -31,10 +31,14 @@ export function PostCard({ post, canManage, onDelete, onReport }: PostCardProps)
   useEffect(() => {
     const fetchAuthorAvatar = async () => {
         if (authorId) {
-            const userDoc = await getDoc(doc(db, 'users', authorId));
-            if (userDoc.exists()) {
-                const userData = userDoc.data();
-                setAvatarStyle(userData.avatarStyle || 'micah');
+            try {
+                const userDoc = await getDoc(doc(db, 'users', authorId));
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    setAvatarStyle(userData.avatarStyle || 'micah');
+                }
+            } catch (error) {
+                console.error("Error fetching user avatar:", error)
             }
         }
     }
@@ -52,7 +56,7 @@ export function PostCard({ post, canManage, onDelete, onReport }: PostCardProps)
           <span className="font-semibold">{authorName}</span>
         </div>
         <p className="text-xs text-muted-foreground">
-          {createdAt ? format(createdAt.toDate(), "d 'de' MMMM 'de' yyyy, HH:mm", { locale: es }) : ''}
+          {createdAt ? formatDistanceToNow(createdAt.toDate(), { locale: es, addSuffix: true }) : ''}
         </p>
       </CardHeader>
       <CardContent className="p-4">

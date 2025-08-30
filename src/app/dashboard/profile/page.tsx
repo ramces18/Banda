@@ -15,7 +15,7 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 const avatarStyles = [
-    "micah", "bottts", "big-smile", "miniavs"
+    "micah", "bottts", "big-smile", "miniavs", "adventurer", "pixel-art", "fun-emoji", "croodles"
 ];
 
 export default function ProfilePage() {
