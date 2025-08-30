@@ -27,20 +27,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        setUser(user);
-        const userDoc = await getDoc(doc(db, "users", user.uid));
-        if (userDoc.exists()) {
-          setBandUser({ id: userDoc.id, ...userDoc.data() } as BandUser);
+      try {
+        if (user) {
+          setUser(user);
+          const userDoc = await getDoc(doc(db, "users", user.uid));
+          if (userDoc.exists()) {
+            setBandUser({ id: userDoc.id, ...userDoc.data() } as BandUser);
+          } else {
+            console.warn(`No user document found for UID: ${user.uid}`);
+            setBandUser(null);
+          }
         } else {
-          // Handle case where user exists in Auth but not in Firestore
+          setUser(null);
           setBandUser(null);
         }
-      } else {
+      } catch (error) {
+        console.error("Error fetching user data from Firestore:", error);
         setUser(null);
         setBandUser(null);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     });
 
     return () => unsubscribe();
@@ -48,6 +55,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     await signOut(auth);
+    setBandUser(null);
+    setUser(null);
     router.push("/");
   };
 
