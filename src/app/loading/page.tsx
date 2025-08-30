@@ -11,10 +11,12 @@ export default function LoadingPage() {
   const { user, loading } = useAuth();
 
   useEffect(() => {
+    // No hacer nada mientras está cargando
     if (loading) {
-      return; // Espera a que termine la carga del estado de autenticación
+      return;
     }
 
+    // Si hay usuario, ir al dashboard, si no, a la página de inicio.
     if (user) {
       router.replace("/dashboard");
     } else {
@@ -27,7 +29,7 @@ export default function LoadingPage() {
       <Logo />
       <div className="flex items-center space-x-2">
         <Loader2 className="h-6 w-6 animate-spin text-primary" />
-        <p className="text-lg text-muted-foreground">Cargando dashboard...</p>
+        <p className="text-lg text-muted-foreground">Cargando...</p>
       </div>
     </div>
   );

@@ -16,11 +16,13 @@ export default function DashboardLayout({
   const router = useRouter();
 
   useEffect(() => {
+    // Si ha terminado de cargar y no hay usuario, redirige a la página de inicio
     if (!loading && !user) {
       router.replace("/");
     }
   }, [user, loading, router]);
 
+  // Muestra el loader mientras se obtiene la info o si falta el usuario o el bandUser
   if (loading || !user || !bandUser) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -28,7 +30,8 @@ export default function DashboardLayout({
       </div>
     );
   }
-
+  
+  // Si todo está correcto, muestra el dashboard
   return (
     <div className="flex min-h-screen w-full bg-muted/40">
       <Sidebar />

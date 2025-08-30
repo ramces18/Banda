@@ -27,22 +27,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setLoading(true);
       try {
         if (user) {
+          // Primero, seteamos el usuario de Auth
           setUser(user);
+          // Luego, buscamos el documento en Firestore
           const userDoc = await getDoc(doc(db, "users", user.uid));
           if (userDoc.exists()) {
             setBandUser({ id: userDoc.id, ...userDoc.data() } as BandUser);
           } else {
-            console.warn(`No user document found for UID: ${user.uid}`);
+            // Si no existe, el bandUser es nulo y se queda en loading en el layout
+            console.warn(`No user document found in Firestore for UID: ${user.uid}`);
             setBandUser(null);
+            // Considera cerrar sesión si el documento no existe
+            // await signOut(auth); 
           }
         } else {
           setUser(null);
           setBandUser(null);
         }
       } catch (error) {
-        console.error("Error fetching user data from Firestore:", error);
+        console.error("Error in AuthProvider:", error);
         setUser(null);
         setBandUser(null);
       } finally {
@@ -54,10 +60,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const logout = async () => {
-    await signOut(auth);
-    setBandUser(null);
-    setUser(null);
-    router.push("/");
+    try {
+      await signOut(auth);
+      router.push("/");
+    } catch (error) {
+       console.error("Error signing out: ", error);
+    }
   };
 
   const value = { user, bandUser, loading, logout };
