@@ -2,7 +2,7 @@
 "use client";
 import { useAuth } from "@/hooks/use-auth";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Info, ShieldWarning } from "lucide-react";
+import { Info, ShieldAlert } from "lucide-react";
 
 export default function HomePage() {
   const { bandUser } = useAuth();
@@ -27,7 +27,7 @@ export default function HomePage() {
             Este portal ha sido creado para centralizar toda nuestra comunicación, facilitar el acceso a partituras, coordinar nuestros horarios y mejorar la colaboración entre todos los miembros. Es nuestra herramienta para funcionar de manera más unida y eficiente.
           </p>
           <div className="flex items-start gap-4 rounded-lg border border-amber-500/50 bg-amber-500/10 p-4">
-            <ShieldWarning className="h-6 w-6 text-amber-500 mt-1" />
+            <ShieldAlert className="h-6 w-6 text-amber-500 mt-1" />
             <div>
               <h3 className="font-semibold text-amber-400">Aviso de Confidencialidad</h3>
               <p className="text-sm text-amber-400/80">
