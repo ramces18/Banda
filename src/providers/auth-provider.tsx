@@ -6,7 +6,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { usePathname, useRouter } from "next/navigation";
 import type { ReactNode } from "react";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useCallback } from "react";
 
 import { auth, db } from "@/lib/firebase";
 import type { BandUser } from "@/lib/types";
@@ -16,6 +16,7 @@ interface AuthContextType {
   bandUser: BandUser | null;
   loading: boolean;
   logout: () => void;
+  setBandUser: React.Dispatch<React.SetStateAction<BandUser | null>>; // Expose setBandUser
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -32,9 +33,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(true);
       try {
         if (user) {
-          // Primero, seteamos el usuario de Auth
           setUser(user);
-          // Luego, buscamos el documento en Firestore
           const userDoc = await getDoc(doc(db, "users", user.uid));
           if (userDoc.exists()) {
             setBandUser({ id: userDoc.id, ...userDoc.data() } as BandUser);
@@ -44,7 +43,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           } else {
             console.warn(`No user document found in Firestore for UID: ${user.uid}`);
             setBandUser(null);
-            // Si no se encuentra doc, cerramos sesión para evitar bucles
             await signOut(auth);
           }
         } else {
@@ -72,13 +70,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = async () => {
     try {
       await signOut(auth);
+      // Reset state immediately
+      setUser(null);
+      setBandUser(null);
       router.push("/");
     } catch (error) {
        console.error("Error signing out: ", error);
     }
   };
 
-  const value = { user, bandUser, loading, logout };
+  const value = { user, bandUser, loading, logout, setBandUser };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

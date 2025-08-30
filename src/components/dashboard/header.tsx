@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { LogOut, Menu, User } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import Link from "next/link";
-import { Home, Megaphone, Users, Music, MessageSquare } from "lucide-react";
+import { Home, Megaphone, Users, Music, MessageSquare, CalendarClock } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Logo } from "../logo";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -15,6 +15,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 const navItems = [
   { href: "/dashboard/home", icon: Home, label: "Inicio", roles: ["lider", "dirigente", "miembro"] },
   { href: "/dashboard/announcements", icon: Megaphone, label: "Anuncios", roles: ["lider", "dirigente", "miembro"] },
+  { href: "/dashboard/schedules", icon: CalendarClock, label: "Horarios", roles: ["lider", "dirigente", "miembro"] },
   { href: "/dashboard/scores", icon: Music, label: "Partituras", roles: ["lider", "dirigente", "miembro"] },
   { href: "/dashboard/forum", icon: MessageSquare, label: "Foro", roles: ["lider", "dirigente", "miembro"] },
   { href: "/dashboard/users", icon: Users, label: "Usuarios", roles: ["lider"] },
@@ -60,7 +61,7 @@ export function Header() {
                   <Button
                     key={item.href}
                     asChild
-                    variant={pathname === item.href ? "secondary" : "ghost"}
+                    variant={pathname.startsWith(item.href) ? "secondary" : "ghost"}
                     className="w-full justify-start"
                   >
                     <Link href={item.href}>

@@ -13,19 +13,25 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 export default function ProfilePage() {
-  const { bandUser, setBandUser } = useAuth(); // Assuming setBandUser is available from context
+  const { bandUser, setBandUser } = useAuth(); 
   const { toast } = useToast();
 
   const [nombreCompleto, setNombreCompleto] = useState(bandUser?.nombreCompleto || "");
   const [isSaving, setIsSaving] = useState(false);
 
   const getInitials = (name: string) => {
+    if (!name) return "";
     return name.split(' ').map(n => n[0]).join('').toUpperCase();
   };
 
   const handleProfileUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!bandUser) return;
+
+    // Do nothing if name hasn't changed
+    if (nombreCompleto === bandUser.nombreCompleto) {
+        return;
+    }
 
     setIsSaving(true);
     try {
@@ -80,19 +86,21 @@ export default function ProfilePage() {
               </Avatar>
               <div className="flex-1">
                  <p className="text-sm text-muted-foreground">
-                    La foto de perfil se genera automáticamente. En el futuro podrás subir la tuya.
+                    La foto de perfil se genera automáticamente. Próximamente podrás subir tu propia foto y personalizarla.
                  </p>
               </div>
             </div>
 
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="username">Nombre de Usuario</Label>
+                <Label htmlFor="username">Usuario</Label>
                 <Input id="username" value={bandUser.username} disabled />
+                 <p className="text-xs text-muted-foreground">Tu nombre de usuario no se puede cambiar.</p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="rol">Rol</Label>
                 <Input id="rol" value={bandUser.rol.charAt(0).toUpperCase() + bandUser.rol.slice(1)} disabled />
+                 <p className="text-xs text-muted-foreground">Tu rol es asignado por un líder.</p>
               </div>
             </div>
 
@@ -106,7 +114,7 @@ export default function ProfilePage() {
               />
             </div>
             
-            <Button type="submit" disabled={isSaving}>
+            <Button type="submit" disabled={isSaving || nombreCompleto === bandUser.nombreCompleto}>
               {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Guardar Cambios
             </Button>
@@ -116,6 +124,3 @@ export default function ProfilePage() {
     </div>
   );
 }
-
-// NOTE: We need to update useAuth hook to expose setBandUser
-// This is an optimistic update. A more robust solution might involve re-fetching the user data.
