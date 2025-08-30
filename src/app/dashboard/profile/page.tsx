@@ -15,8 +15,7 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 const avatarStyles = [
-    "micah", "adventurer", "bottts", "pixel-art", "big-smile", 
-    "miniavs", "open-peeps", "notionists", "personas"
+    "micah", "bottts", "big-smile", "miniavs"
 ];
 
 export default function ProfilePage() {
@@ -103,7 +102,7 @@ export default function ProfilePage() {
                         </p>
                     </div>
                 </div>
-                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                    {avatarStyles.map(style => (
                         <button
                             type="button"
@@ -118,9 +117,9 @@ export default function ProfilePage() {
                             <Image
                                 src={`https://api.dicebear.com/7.x/${style}/svg?seed=${bandUser.id}`}
                                 alt={style}
-                                width={80}
-                                height={80}
-                                className="rounded-md bg-muted"
+                                width={120}
+                                height={120}
+                                className="rounded-md bg-muted aspect-square object-cover"
                             />
                         </button>
                    ))}
