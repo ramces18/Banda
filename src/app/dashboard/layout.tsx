@@ -1,7 +1,8 @@
+
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import { Loader2 } from "lucide-react";
 import { Sidebar } from "@/components/dashboard/sidebar";
@@ -14,21 +15,31 @@ export default function DashboardLayout({
 }) {
   const { user, bandUser, loading } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
-    // Si ha terminado de cargar y no hay usuario, redirige a la página de inicio
+    // Si ha terminado de cargar y no hay usuario autenticado, redirige a la página de login
     if (!loading && !user) {
-      router.replace("/");
+      router.replace("/login");
     }
+    // Si el usuario está autenticado pero no tiene un documento en la banda
+    // (posiblemente durante la creación), no hagas nada y deja que AuthProvider lo maneje.
   }, [user, loading, router]);
-
-  // Muestra el loader mientras se obtiene la info o si falta el usuario o el bandUser
-  if (loading || !user || !bandUser) {
+  
+  // Si está cargando o si el usuario está autenticado pero aún no tenemos el perfil de la banda,
+  // muestra un loader. Esto previene mostrar el dashboard incompleto.
+  if (loading || (user && !bandUser)) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
       </div>
     );
+  }
+  
+  // Si no hay usuario y ya no está cargando, no renderices el layout para evitar un flash
+  // de contenido antes de la redirección.
+  if (!user) {
+    return null;
   }
   
   // Si todo está correcto, muestra el dashboard

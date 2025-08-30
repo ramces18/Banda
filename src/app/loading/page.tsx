@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Logo } from "@/components/logo";
@@ -18,7 +19,7 @@ export default function LoadingPage() {
 
     // Si hay usuario, ir al dashboard, si no, a la página de inicio.
     if (user) {
-      router.replace("/dashboard");
+      router.replace("/dashboard/home");
     } else {
       router.replace("/");
     }

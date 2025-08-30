@@ -1,17 +1,19 @@
+
 "use client";
 
 import { useAuth } from "@/hooks/use-auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { LogOut, Menu, MessageSquare, Music } from "lucide-react";
+import { LogOut, Menu, User } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import Link from "next/link";
-import { Home, Megaphone, Users } from "lucide-react";
+import { Home, Megaphone, Users, Music, MessageSquare } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Logo } from "../logo";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 const navItems = [
-  { href: "/dashboard", icon: Home, label: "Dashboard", roles: ["lider", "dirigente", "miembro"] },
+  { href: "/dashboard/home", icon: Home, label: "Inicio", roles: ["lider", "dirigente", "miembro"] },
   { href: "/dashboard/announcements", icon: Megaphone, label: "Anuncios", roles: ["lider", "dirigente", "miembro"] },
   { href: "/dashboard/scores", icon: Music, label: "Partituras", roles: ["lider", "dirigente", "miembro"] },
   { href: "/dashboard/forum", icon: MessageSquare, label: "Foro", roles: ["lider", "dirigente", "miembro"] },
@@ -31,6 +33,7 @@ export function Header() {
   }
 
   const getInitials = (name: string) => {
+    if (!name) return "";
     return name.split(' ').map(n => n[0]).join('').toUpperCase();
   }
 
@@ -44,9 +47,11 @@ export function Header() {
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="flex flex-col p-0">
-            <SheetHeader className="p-4 border-b">
+             <SheetHeader className="p-4 border-b">
                <SheetTitle>
-                 <Logo />
+                 <Link href="/">
+                    <Logo />
+                 </Link>
               </SheetTitle>
             </SheetHeader>
             <nav className="flex-1 p-4 space-y-2">
@@ -55,7 +60,7 @@ export function Header() {
                   <Button
                     key={item.href}
                     asChild
-                    variant={pathname.startsWith(item.href) ? "secondary" : "ghost"}
+                    variant={pathname === item.href ? "secondary" : "ghost"}
                     className="w-full justify-start"
                   >
                     <Link href={item.href}>
@@ -76,16 +81,34 @@ export function Header() {
         </Sheet>
       </div>
       <div className="hidden lg:block"></div>
-      <div className="flex items-center gap-4">
-        <div className="text-right">
-          <p className="font-semibold">{bandUser.nombreCompleto}</p>
-          <p className="text-xs text-muted-foreground capitalize">{bandUser.rol}</p>
-        </div>
-        <Avatar>
-          <AvatarImage src={`https://api.dicebear.com/7.x/micah/svg?seed=${bandUser.id}`} />
-          <AvatarFallback>{getInitials(bandUser.nombreCompleto)}</AvatarFallback>
-        </Avatar>
-      </div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <div className="flex items-center gap-4 cursor-pointer">
+            <div className="text-right">
+              <p className="font-semibold">{bandUser.nombreCompleto}</p>
+              <p className="text-xs text-muted-foreground capitalize">{bandUser.rol}</p>
+            </div>
+            <Avatar>
+              <AvatarImage src={`https://api.dicebear.com/7.x/micah/svg?seed=${bandUser.id}`} />
+              <AvatarFallback>{getInitials(bandUser.nombreCompleto)}</AvatarFallback>
+            </Avatar>
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Mi Cuenta</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <Link href="/dashboard/profile">
+                <User className="mr-2 h-4 w-4" />
+                <span>Perfil</span>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={logout}>
+             <LogOut className="mr-2 h-4 w-4" />
+             <span>Cerrar Sesión</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </header>
   );
 }

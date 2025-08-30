@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Logo } from "@/components/logo";
@@ -8,7 +9,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const navItems = [
-  { href: "/dashboard", icon: Home, label: "Dashboard", roles: ["lider", "dirigente", "miembro"] },
+  { href: "/dashboard/home", icon: Home, label: "Inicio", roles: ["lider", "dirigente", "miembro"] },
   { href: "/dashboard/announcements", icon: Megaphone, label: "Anuncios", roles: ["lider", "dirigente", "miembro"] },
   { href: "/dashboard/scores", icon: Music, label: "Partituras", roles: ["lider", "dirigente", "miembro"] },
   { href: "/dashboard/forum", icon: MessageSquare, label: "Foro", roles: ["lider", "dirigente", "miembro"] },
@@ -24,7 +25,9 @@ export function Sidebar() {
   return (
     <aside className="hidden lg:flex flex-col w-64 border-r bg-card">
       <div className="p-4 border-b">
-        <Logo />
+         <Link href="/">
+            <Logo />
+        </Link>
       </div>
       <nav className="flex-1 p-4 space-y-2">
         {navItems.map((item) =>
@@ -32,7 +35,7 @@ export function Sidebar() {
             <Button
               key={item.href}
               asChild
-              variant={pathname.startsWith(item.href) ? "secondary" : "ghost"}
+              variant={pathname === item.href ? "secondary" : "ghost"}
               className="w-full justify-start"
             >
               <Link href={item.href}>

@@ -1,3 +1,4 @@
+
 "use client";
 import { useAuth } from "@/hooks/use-auth";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
@@ -6,7 +7,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useEffect, useState } from "react";
 
-export default function DashboardPage() {
+export default function HomePage() {
   const { bandUser } = useAuth();
   const [stats, setStats] = useState({ users: 0, announcements: 0 });
 

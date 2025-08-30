@@ -1,3 +1,4 @@
+
 import type { Timestamp } from 'firebase/firestore';
 
 export interface BandUser {
@@ -17,4 +18,23 @@ export interface Announcement {
   autorNombre?: string; // To display author name
   importancia: 'normal' | 'alta' | 'baja';
   imageUrl?: string; // Optional image for the announcement
+}
+
+export interface ForumTopic {
+    id: string;
+    title: string;
+    authorId: string;
+    authorName: string;
+    createdAt: Timestamp;
+    lastReplyAt: Timestamp;
+    replyCount: number;
+}
+
+export interface ForumPost {
+    id: string;
+    topicId: string;
+    authorId: string;
+    authorName: string;
+    content: string;
+    createdAt: Timestamp;
 }
