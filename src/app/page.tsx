@@ -1,7 +1,8 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Logo } from "@/components/logo";
 import { ArrowRight, BookOpen, MessageSquare, Music } from "lucide-react";
 import Link from "next/link";
@@ -27,10 +28,10 @@ const features = [
 
 export default function LandingPage() {
     return (
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col min-h-screen bg-background">
             <header className="px-4 lg:px-6 h-16 flex items-center justify-between border-b">
                 <Logo />
-                <Button asChild>
+                <Button asChild variant="ghost">
                     <Link href="/login">
                         Iniciar Sesión
                         <ArrowRight className="ml-2 h-4 w-4" />
@@ -38,12 +39,12 @@ export default function LandingPage() {
                 </Button>
             </header>
             <main className="flex-1">
-                <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
+                <section className="w-full py-20 md:py-32 lg:py-40">
                     <div className="container px-4 md:px-6">
-                        <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
+                        <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 xl:gap-24 items-center">
                             <div className="flex flex-col justify-center space-y-4">
                                 <div className="space-y-2">
-                                    <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
+                                    <h1 className="text-4xl font-extrabold tracking-tighter sm:text-5xl xl:text-6xl/none">
                                         Portal de Gestión para La Banda del IDI
                                     </h1>
                                     <p className="max-w-[600px] text-muted-foreground md:text-xl">
@@ -53,6 +54,7 @@ export default function LandingPage() {
                                 <Button asChild size="lg" className="w-fit">
                                     <Link href="/login">
                                         Acceder al Portal
+                                        <ArrowRight className="ml-2 h-5 w-5" />
                                     </Link>
                                 </Button>
                             </div>
@@ -60,18 +62,18 @@ export default function LandingPage() {
                                 src="https://picsum.photos/1200/800"
                                 width="1200"
                                 height="800"
-                                alt="Hero"
+                                alt="Banda de música"
                                 data-ai-hint="marching band"
-                                className="mx-auto aspect-video overflow-hidden rounded-xl object-cover sm:w-full lg:order-last"
+                                className="mx-auto aspect-video overflow-hidden rounded-xl object-cover"
                             />
                         </div>
                     </div>
                 </section>
-                <section id="features" className="w-full py-12 md:py-24 lg:py-32 bg-muted">
+                <section id="features" className="w-full py-12 md:py-24 lg:py-32 bg-muted/50">
                     <div className="container px-4 md:px-6">
                         <div className="flex flex-col items-center justify-center space-y-4 text-center">
                             <div className="space-y-2">
-                                <div className="inline-block rounded-lg bg-secondary px-3 py-1 text-sm">Funcionalidades</div>
+                                <div className="inline-block rounded-lg bg-primary/10 text-primary px-3 py-1 text-sm font-semibold">Funcionalidades</div>
                                 <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Todo lo que la Banda Necesita</h2>
                                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                                     Desde la comunicación oficial hasta la colaboración entre miembros, nuestro portal lo tiene todo.
@@ -80,9 +82,9 @@ export default function LandingPage() {
                         </div>
                         <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-2 md:gap-12 lg:grid-cols-3 mt-12">
                             {features.map((feature, index) => (
-                                <Card key={index} className="shadow-lg">
-                                    <CardHeader>
-                                        <div className="mb-4">{feature.icon}</div>
+                                <Card key={index} className="shadow-md hover:shadow-lg transition-shadow">
+                                    <CardHeader className="flex flex-row items-center gap-4">
+                                        {feature.icon}
                                         <CardTitle>{feature.title}</CardTitle>
                                     </CardHeader>
                                     <CardContent>

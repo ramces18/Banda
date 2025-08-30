@@ -1,3 +1,4 @@
+
 "use client";
 import { useAuth } from "@/hooks/use-auth";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
@@ -11,7 +12,7 @@ export default function HomePage() {
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold">Bienvenido, {bandUser.nombreCompleto}</h1>
-      <Card className="shadow-lg">
+      <Card>
         <CardHeader>
           <div className="flex items-center gap-4">
             <Info className="h-8 w-8 text-primary" />
