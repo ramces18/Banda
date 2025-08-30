@@ -4,7 +4,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { LogOut, Menu } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import Link from "next/link";
 import { Home, Megaphone, Users } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -42,9 +42,11 @@ export function Header() {
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="flex flex-col p-0">
-            <div className="p-4 border-b">
-              <Logo />
-            </div>
+            <SheetHeader className="p-4 border-b">
+              <SheetTitle>
+                <Logo />
+              </SheetTitle>
+            </SheetHeader>
             <nav className="flex-1 p-4 space-y-2">
               {navItems.map((item) =>
                 item.roles.includes(bandUser.rol) ? (
