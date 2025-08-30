@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -90,7 +89,7 @@ export default function LoginPage() {
           <Link href="/" className="flex justify-center mb-8">
             <Logo />
           </Link>
-          <Card className="shadow-2xl">
+          <Card className="shadow-lg">
             <CardHeader className="text-center">
               <CardTitle className="text-3xl font-bold">Bienvenido</CardTitle>
               <CardDescription>

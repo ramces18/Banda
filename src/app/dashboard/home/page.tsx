@@ -1,4 +1,3 @@
-
 "use client";
 import { useAuth } from "@/hooks/use-auth";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
@@ -12,7 +11,7 @@ export default function HomePage() {
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold">Bienvenido, {bandUser.nombreCompleto}</h1>
-      <Card>
+      <Card className="shadow-lg">
         <CardHeader>
           <div className="flex items-center gap-4">
             <Info className="h-8 w-8 text-primary" />
@@ -26,11 +25,11 @@ export default function HomePage() {
           <p className="text-muted-foreground">
             Este portal ha sido creado para centralizar toda nuestra comunicación, facilitar el acceso a partituras, coordinar nuestros horarios y mejorar la colaboración entre todos los miembros. Es nuestra herramienta para funcionar de manera más unida y eficiente.
           </p>
-          <div className="flex items-start gap-4 rounded-lg border border-amber-500/50 bg-amber-500/10 p-4">
-            <ShieldAlert className="h-6 w-6 text-amber-500 mt-1" />
+          <div className="flex items-start gap-4 rounded-lg border border-yellow-500/50 bg-yellow-500/10 p-4">
+            <ShieldAlert className="h-6 w-6 text-yellow-500 mt-1" />
             <div>
-              <h3 className="font-semibold text-amber-400">Aviso de Confidencialidad</h3>
-              <p className="text-sm text-amber-400/80">
+              <h3 className="font-semibold text-yellow-400">Aviso de Confidencialidad</h3>
+              <p className="text-sm text-yellow-400/80">
                 La información contenida en este portal es para uso exclusivo de los miembros de la banda. Por favor, no compartas tus credenciales de acceso ni difundas el contenido fuera de este espacio.
               </p>
             </div>

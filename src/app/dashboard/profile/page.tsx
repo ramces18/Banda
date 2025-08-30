@@ -1,4 +1,3 @@
-
 "use client";
 import { useAuth } from "@/hooks/use-auth";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
@@ -79,7 +78,7 @@ export default function ProfilePage() {
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold">Mi Perfil</h1>
-      <Card>
+      <Card className="shadow-lg">
         <CardHeader>
           <CardTitle>Información Personal</CardTitle>
           <CardDescription>

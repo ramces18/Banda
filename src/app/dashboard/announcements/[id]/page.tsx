@@ -124,7 +124,7 @@ export default function AnnouncementDetailPage() {
         </div>
       )}
 
-      <Card>
+      <Card className="shadow-lg">
         <CardContent className="pt-6">
             <div className="prose prose-lg dark:prose-invert max-w-none whitespace-pre-wrap">
                 {announcement.contenido}

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Logo } from "@/components/logo";
@@ -25,7 +24,7 @@ export function Sidebar() {
 
   return (
     <aside className="hidden lg:flex flex-col w-64 border-r bg-card">
-      <div className="p-4 border-b">
+      <div className="p-4 border-b h-16 flex items-center">
          <Link href="/">
             <Logo />
         </Link>

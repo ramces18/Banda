@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -81,7 +80,7 @@ export default function LandingPage() {
                         </div>
                         <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-2 md:gap-12 lg:grid-cols-3 mt-12">
                             {features.map((feature, index) => (
-                                <Card key={index}>
+                                <Card key={index} className="shadow-lg">
                                     <CardHeader>
                                         <div className="mb-4">{feature.icon}</div>
                                         <CardTitle>{feature.title}</CardTitle>
