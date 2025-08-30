@@ -38,6 +38,8 @@ export function Header() {
     return name.split(' ').map(n => n[0]).join('').toUpperCase();
   }
 
+  const avatarStyle = bandUser.avatarStyle || 'micah';
+
   return (
     <header className="flex h-16 items-center justify-between border-b bg-card px-4 lg:px-6">
       <div className="lg:hidden">
@@ -90,7 +92,7 @@ export function Header() {
               <p className="text-xs text-muted-foreground capitalize">{bandUser.rol}</p>
             </div>
             <Avatar>
-              <AvatarImage src={`https://api.dicebear.com/7.x/micah/svg?seed=${bandUser.id}`} />
+              <AvatarImage src={`https://api.dicebear.com/7.x/${avatarStyle}/svg?seed=${bandUser.id}`} />
               <AvatarFallback>{getInitials(bandUser.nombreCompleto)}</AvatarFallback>
             </Avatar>
           </div>

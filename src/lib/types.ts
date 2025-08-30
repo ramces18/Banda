@@ -7,6 +7,7 @@ export interface BandUser {
   nombreCompleto: string;
   rol: 'lider' | 'dirigente' | 'miembro';
   fechaRegistro: Timestamp;
+  avatarStyle?: string; // e.g., 'micah', 'adventurer', etc.
 }
 
 export interface Announcement {

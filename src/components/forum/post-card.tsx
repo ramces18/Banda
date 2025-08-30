@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { Trash2, Flag } from "lucide-react";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
+import { useEffect, useState } from "react";
 
 interface PostCardProps {
   post: ForumPost;
@@ -23,13 +26,27 @@ const getInitials = (name: string) => {
 
 export function PostCard({ post, canManage, onDelete, onReport }: PostCardProps) {
   const { authorName, content, createdAt, authorId } = post;
+  const [avatarStyle, setAvatarStyle] = useState('micah');
+
+  useEffect(() => {
+    const fetchAuthorAvatar = async () => {
+        if (authorId) {
+            const userDoc = await getDoc(doc(db, 'users', authorId));
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                setAvatarStyle(userData.avatarStyle || 'micah');
+            }
+        }
+    }
+    fetchAuthorAvatar();
+  }, [authorId]);
 
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between p-4 border-b">
         <div className="flex items-center gap-3">
           <Avatar>
-            <AvatarImage src={`https://api.dicebear.com/7.x/micah/svg?seed=${authorId}`} />
+            <AvatarImage src={`https://api.dicebear.com/7.x/${avatarStyle}/svg?seed=${authorId}`} />
             <AvatarFallback>{getInitials(authorName)}</AvatarFallback>
           </Avatar>
           <span className="font-semibold">{authorName}</span>
