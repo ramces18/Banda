@@ -5,15 +5,16 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Music } from "lucide-react";
 
 const scores = [
-  { name: "Himno 15" },
-  { name: "Caña Dulce" },
-  { name: "Cimarrona" },
-  { name: "Bolero (Bomboro con Perfume)" },
-  { name: "Merengues (Volvere y Noches)" },
-  { name: "Cumbias (Campirana Racha y Como ye voy a olvidar)" },
-  { name: "Lowrider con BLINDING" },
-  { name: "MATADOR" },
-  { name: "RICURAS" },
+  { name: "Himno 15", notes: "" },
+  { name: "Caña Dulce", notes: "" },
+  { name: "Cimarrona", notes: "" },
+  { name: "Bolero (Bomboro con Perfume)", notes: "" },
+  { name: "Merengues (Volvere y Noches)", notes: "" },
+  { name: "Cumbias (Campirana Racha y Como ye voy a olvidar)", notes: "" },
+  { name: "Lowrider con BLINDING", notes: "" },
+  { name: "MATADOR", notes: "" },
+  { name: "RICURAS", notes: "" },
+  { name: "Marcha", notes: "Debemos tocar suave, que suene a marcha, no a comparsa." },
 ];
 
 export default function ScoresPage() {
@@ -37,8 +38,9 @@ export default function ScoresPage() {
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="w-[100px]">#</TableHead>
+                            <TableHead className="w-[50px]">#</TableHead>
                             <TableHead>Nombre de la Partitura</TableHead>
+                            <TableHead>Notas</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -46,6 +48,7 @@ export default function ScoresPage() {
                             <TableRow key={index}>
                                 <TableCell className="font-medium">{index + 1}</TableCell>
                                 <TableCell>{score.name}</TableCell>
+                                <TableCell className="text-muted-foreground">{score.notes}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
