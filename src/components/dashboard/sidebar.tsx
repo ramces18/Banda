@@ -3,7 +3,7 @@
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
-import { Home, LogOut, Megaphone, Users, Music, MessageSquare, CalendarClock } from "lucide-react";
+import { Home, LogOut, Megaphone, Users, Music, MessageSquare, CalendarClock, Map } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -12,6 +12,7 @@ const navItems = [
   { href: "/dashboard/announcements", icon: Megaphone, label: "Anuncios", roles: ["lider", "dirigente", "miembro"] },
   { href: "/dashboard/schedules", icon: CalendarClock, label: "Horarios", roles: ["lider", "dirigente", "miembro"] },
   { href: "/dashboard/scores", icon: Music, label: "Partituras", roles: ["lider", "dirigente", "miembro"] },
+  { href: "/dashboard/route", icon: Map, label: "Recorrido", roles: ["lider", "dirigente", "miembro"] },
   { href: "/dashboard/forum", icon: MessageSquare, label: "Foro", roles: ["lider", "dirigente", "miembro"] },
   { href: "/dashboard/users", icon: Users, label: "Usuarios", roles: ["lider"] },
 ];

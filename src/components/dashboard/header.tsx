@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { LogOut, Menu, User } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import Link from "next/link";
-import { Home, Megaphone, Users, Music, MessageSquare, CalendarClock } from "lucide-react";
+import { Home, Megaphone, Users, Music, MessageSquare, CalendarClock, Map } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Logo } from "../logo";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -16,6 +16,7 @@ const navItems = [
   { href: "/dashboard/announcements", icon: Megaphone, label: "Anuncios", roles: ["lider", "dirigente", "miembro"] },
   { href: "/dashboard/schedules", icon: CalendarClock, label: "Horarios", roles: ["lider", "dirigente", "miembro"] },
   { href: "/dashboard/scores", icon: Music, label: "Partituras", roles: ["lider", "dirigente", "miembro"] },
+  { href: "/dashboard/route", icon: Map, label: "Recorrido", roles: ["lider", "dirigente", "miembro"] },
   { href: "/dashboard/forum", icon: MessageSquare, label: "Foro", roles: ["lider", "dirigente", "miembro"] },
   { href: "/dashboard/users", icon: Users, label: "Usuarios", roles: ["lider"] },
 ];
