@@ -1,4 +1,3 @@
-
 import type { Timestamp } from 'firebase/firestore';
 
 export interface BandUser {
@@ -20,6 +19,16 @@ export interface Announcement {
   importancia: 'normal' | 'alta' | 'baja';
   imageUrl?: string; // Optional image for the announcement
 }
+
+export interface Event {
+  id: string;
+  title: string;
+  description: string;
+  date: Timestamp;
+  type: 'Ensayo' | 'Acto Cívico' | 'Desfile' | 'Presentación' | 'Otro';
+  createdBy: string; // UID of user who created it
+}
+
 
 export interface ForumTopic {
     id: string;

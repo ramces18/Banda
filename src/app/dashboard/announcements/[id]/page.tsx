@@ -74,7 +74,7 @@ export default function AnnouncementDetailPage() {
         <Button asChild className="mt-4">
           <Link href="/dashboard/announcements">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Volver a Anuncios
+            Volver a Anuncios y Eventos
           </Link>
         </Button>
       </div>
@@ -84,12 +84,12 @@ export default function AnnouncementDetailPage() {
   const importanceInfo = importanceMap[announcement.importancia] || importanceMap.normal;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-8 p-4">
       <div>
         <Button asChild variant="outline" size="sm" className="mb-4">
            <Link href="/dashboard/announcements">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Volver a Anuncios
+            Volver a Anuncios y Eventos
           </Link>
         </Button>
 
@@ -114,7 +114,7 @@ export default function AnnouncementDetailPage() {
       </div>
       
       {announcement.imageUrl && (
-        <div className="relative w-full aspect-video rounded-lg overflow-hidden shadow-lg">
+        <div className="relative w-full aspect-video rounded-xl overflow-hidden shadow-lg">
           <Image
             src={announcement.imageUrl}
             alt={announcement.titulo}
