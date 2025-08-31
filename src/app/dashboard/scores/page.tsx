@@ -6,7 +6,7 @@ import { Music, Link as LinkIcon } from "lucide-react";
 import Link from "next/link";
 
 const scores = [
-  { name: "Himno 15 – Loámoste, ¡oh Dios!", notes: "", link: "https://www.youtube.com/watch?v=6SnDWceJBws" },
+  { name: "Himno al 15 de Septiembre", notes: "", link: "https://www.youtube.com/watch?v=wJgFIZ1SxoU" },
   { name: "Caña Dulce – Canción folclórica de Costa Rica", notes: "", link: "https://www.youtube.com/watch?v=UOu5UVJGpAU" },
   { name: "Cimarrona La Original Domingueña – Fara Fara Chin", notes: "", link: "https://www.youtube.com/watch?v=mAPtajPRFBs" },
   { name: "Bomboro Quiñá Quiñá – La Sonora Santanera", notes: "", link: "https://www.youtube.com/watch?v=6-wOGPzTtZw" },
@@ -16,7 +16,6 @@ const scores = [
   { name: "Low Rider – WAR", notes: "", link: "https://www.youtube.com/watch?v=BsrqKE1iqqo" },
   { name: "Matador – Los Fabulosos Cadillacs", notes: "", link: "https://www.youtube.com/watch?v=pjPA7CXutDw" },
   { name: "Ricuras", notes: "Pendiente de enlace" },
-  { name: "15 de Septiembre", notes: "", link: "https://www.youtube.com/watch?v=wJgFIZ1SxoU" },
   { name: "Marcha", notes: "Debemos tocar suave, que suene a marcha, no a comparsa." },
 ];
 
