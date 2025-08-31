@@ -23,7 +23,7 @@ export default function RoutePage() {
         <CardContent>
            <div className="aspect-video w-full overflow-hidden rounded-lg border">
              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d31439.51000624823!2d-84.12089414925707!3d9.99842187900055!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e2!4m5!1s0x8fa0faddd54480e7%3A0x64a95a8942a78f3!2sTaqueria%20Costa%20Rica%2C%20Av.%201%2C%20Heredia!3m2!1d9.998616!2d-84.118903!4m5!1s0x8fa0fae3f05f7c35%3A0x51405e3f53833e2a!2sInstituto%20de%20Desarrollo%20de%20Inteligencia%2C%20Heredia%20Province%2C%20Heredia!3m2!1d9.9972848!2d-84.1214041!5e0!3m2!1sen!2sus!4v1719946227301!5m2!1sen!2sus"
+                src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d3929.988224951919!2d-84.10463272498616!3d9.91560269016834!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e2!4m5!1s0x8fa0fccac0e556cd%3A0xd2ea9263e203a69b!2sTaquer%C3%ADa%20Costa%20Rica%2C%20Calle%20Costa%20Rica%2C%20San%20Jos%C3%A9%2C%20Hatillo%203%2C%20Costa%20Rica!3m2!1d9.9156027!2d-84.1024578!4m5!1s0x8fa0e34b02b4cc2f%3A0x6100635a97bdf678!2sInstituto%20de%20Desarrollo%20de%20Inteligencia%2C%20Instituto%20de%20Desarrollo%20de%20la%20Inteligencia%2C%20Avenida%20Villanea%2C%20San%20Jos%C3%A9%20Province%2C%20San%20Jos%C3%A9%2C%20Hatillo%20District%2C%20Costa%20Rica!3m2!1d9.9199492!2d-84.0993048!5e0!3m2!1sen!2scr!4v1722026857143!5m2!1sen!2scr"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}

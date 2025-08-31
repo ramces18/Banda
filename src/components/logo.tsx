@@ -1,10 +1,11 @@
+
 import Image from 'next/image';
 
 export function Logo({ className }: { className?: string }) {
   return (
     <div className={`flex items-center gap-3 ${className}`}>
       <Image 
-        src="https://storage.googleapis.com/studioprototype.appspot.com/v4/web/idi-logo.png"
+        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPA903u2MwhTN5_t-OW-OUw6luHECTXeFjFw&s"
         alt="Logo IDI"
         width={40}
         height={40}

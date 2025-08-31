@@ -45,7 +45,7 @@ export default function LandingPage() {
                             <div className="flex flex-col justify-center space-y-4 text-center lg:text-left">
                                 <div className="space-y-2">
                                     <h1 className="text-4xl font-extrabold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                                        Portal de Gestión para La Banda del IDI
+                                        Pagina oficial para La Banda del IDI
                                     </h1>
                                     <p className="max-w-[600px] text-muted-foreground md:text-xl mx-auto lg:mx-0">
                                         Un espacio centralizado para anuncios, partituras, discusiones y más. Todo lo que necesitas para estar conectado con la banda.
@@ -54,7 +54,7 @@ export default function LandingPage() {
                                 <div className="flex flex-col gap-2 min-[400px]:flex-row justify-center lg:justify-start">
                                      <Button asChild size="lg">
                                         <Link href="/login">
-                                            Acceder al Portal
+                                            Acceder
                                             <ArrowRight className="ml-2 h-5 w-5" />
                                         </Link>
                                     </Button>
@@ -102,10 +102,11 @@ export default function LandingPage() {
                 <p className="text-xs text-muted-foreground">&copy; {new Date().getFullYear()} La banda del IDI. Todos los derechos reservados.</p>
                 <div className="sm:ml-auto">
                      <p className="text-xs text-muted-foreground">
-                        Creado por <span className="font-semibold">CodePen - Gerard Ramces</span>
+                        Creado por <span className="font-semibold">Gerard Ramces</span>
                     </p>
                 </div>
             </footer>
         </div>
     );
 }
+
