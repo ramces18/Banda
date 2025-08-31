@@ -10,8 +10,6 @@ const schedule = [
   { day: "Lunes", time: "10:00 AM - 11:20 AM", type: "Ensayo General" },
   { day: "Martes", time: "10:00 AM - 11:20 AM", type: "Ensayo General" },
   { day: "Viernes", time: "10:00 AM - 11:20 AM", type: "Ensayo General" },
-  { day: "Sábado", time: "10:00 AM - 11:20 AM", type: "Ensayo General" },
-  { day: "Domingo", time: "10:00 AM - 11:20 AM", type: "Ensayo General" },
 ];
 
 export default function SchedulesPage() {
@@ -53,3 +51,4 @@ export default function SchedulesPage() {
     </div>
   );
 }
+
