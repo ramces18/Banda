@@ -16,6 +16,7 @@ const scores = [
   { name: "Low Rider – WAR", notes: "", link: "https://www.youtube.com/watch?v=BsrqKE1iqqo" },
   { name: "Matador – Los Fabulosos Cadillacs", notes: "", link: "https://www.youtube.com/watch?v=pjPA7CXutDw" },
   { name: "Ricuras", notes: "Pendiente de enlace" },
+  { name: "15 de Septiembre", notes: "", link: "https://www.youtube.com/watch?v=wJgFIZ1SxoU" },
   { name: "Marcha", notes: "Debemos tocar suave, que suene a marcha, no a comparsa." },
 ];
 
