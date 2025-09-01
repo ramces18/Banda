@@ -17,7 +17,7 @@ if (!admin.apps.length && process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
     
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
-      projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+      projectId: "banda-b4fc5",
     });
   } catch (error) {
     console.error('Error parsing FIREBASE_SERVICE_ACCOUNT_KEY or initializing Firebase admin:', error);

@@ -21,7 +21,7 @@ export const initializeFirebaseMessaging = async (userId: string) => {
 
       // Get token
       const currentToken = await getToken(messaging, {
-        vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
+        vapidKey: "BNbOHtZfMzIoYwitbeOQWmacYCZ_6NSvniIHvC79BjDxBKfBCZv2Vhj3ZDKSc-D3EBOyDsgzNBW3Im51C3dqozI",
       });
 
       if (currentToken) {
