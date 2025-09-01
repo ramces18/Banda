@@ -1,10 +1,11 @@
+
 'use server';
 
 import { ai } from '@/ai/genkit';
 import { z } from 'genkit';
 import { adminDb, adminMessaging } from '@/lib/firebase-admin';
 
-export const SendNotificationSchema = z.object({
+const SendNotificationSchema = z.object({
   title: z.string().describe('The title of the notification.'),
   body: z.string().describe('The body content of the notification.'),
   announcementId: z.string().describe('The ID of the announcement to link to.'),
