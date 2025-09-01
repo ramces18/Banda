@@ -1,9 +1,22 @@
+
 "use client"
 
 import React from 'react';
-import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { cn } from '@/lib/utils';
+import dynamic from 'next/dynamic';
+import { Skeleton } from './skeleton';
+
+// Dynamically import ReactQuill to ensure it's only loaded on the client side.
+const ReactQuill = dynamic(() => import('react-quill'), { 
+    ssr: false,
+    loading: () => (
+        <div className="space-y-2">
+            <Skeleton className="h-[40px] w-full" />
+            <Skeleton className="h-[150px] w-full" />
+        </div>
+    )
+});
 
 interface RichTextEditorProps {
   value: string;
@@ -30,7 +43,7 @@ const formats = [
     'link', 'color', 'background'
 ];
 
-export const RichTextEditor = React.forwardRef<ReactQuill, RichTextEditorProps>(
+export const RichTextEditor = React.forwardRef<any, RichTextEditorProps>(
   ({ value, onChange, className, ...props }, ref) => {
     return (
         <div className={cn(
@@ -38,7 +51,7 @@ export const RichTextEditor = React.forwardRef<ReactQuill, RichTextEditorProps>(
              className
         )}>
             <ReactQuill
-                ref={ref}
+                forwardedRef={ref}
                 theme="snow"
                 value={value}
                 onChange={onChange}

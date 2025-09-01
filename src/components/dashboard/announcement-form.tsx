@@ -201,6 +201,7 @@ export function AnnouncementForm({ announcement, onFinished }: AnnouncementFormP
                 <RichTextEditor 
                   className={importanceColorClass} 
                   {...field} 
+                  ref={null}
                 />
               </FormControl>
               <FormMessage />
