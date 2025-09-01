@@ -41,7 +41,7 @@ export interface ForumTopic {
 }
 
 export interface ForumPost {
-    id: string;
+    id:string;
     topicId: string;
     authorId: string;
     authorName: string;
@@ -57,4 +57,13 @@ export interface Report {
     reporterId: string;
     reporterName: string;
     reportedAt: Timestamp;
+}
+
+export interface Suggestion {
+  id: string;
+  content: string;
+  submittedAt: Timestamp;
+  submittedBy: string; // UID or 'anonymous'
+  isAnonymous: boolean;
+  isArchived: boolean;
 }
