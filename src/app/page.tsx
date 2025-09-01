@@ -61,9 +61,9 @@ export default function LandingPage() {
                                 </div>
                             </div>
                             <Image
-                                src="https://picsum.photos/1200/800"
-                                width="1200"
-                                height="800"
+                                src="https://novedadeslocales.wordpress.com/wp-content/uploads/2015/11/idi-justo-orozco-101115-003.jpg?w=1038&h=576&crop=1"
+                                width="1038"
+                                height="576"
                                 alt="Banda de música"
                                 data-ai-hint="marching band"
                                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover"
@@ -109,4 +109,3 @@ export default function LandingPage() {
         </div>
     );
 }
-
