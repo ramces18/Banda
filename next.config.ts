@@ -9,11 +9,14 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+   experimental: {
+    allowedDevOrigins: ["https://6000-firebase-studio-*.cluster-f73ibkkuije66wssuontdtbx6q.cloudworkstations.dev"],
+  },
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'placehold.co',
+        hostname: 'pleybast.com',
         port: '',
         pathname: '/**',
       },
