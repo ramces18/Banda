@@ -51,7 +51,8 @@ export function AnnouncementCard({ announcement, canManage, onEdit, onDelete, cl
             <Badge variant={importanceInfo.variant}>{importanceInfo.label}</Badge>
         </div>
         <CardDescription>
-          Por {autorNombre || "Desconocido"} - {format(fecha.toDate(), "d 'de' MMMM 'de' yyyy", { locale: es })}
+          Por {autorNombre || "Desconocido"}
+          {fecha && ` - ${format(fecha.toDate(), "d 'de' MMMM 'de' yyyy", { locale: es })}`}
         </CardDescription>
       </CardHeader>
       <CardContent className="flex-grow">

@@ -33,18 +33,25 @@ export function AnnouncementsList() {
       setLoading(true);
       const authorPromises = querySnapshot.docs.map(async (docSnapshot) => {
         const data = docSnapshot.data();
+        if (!data.fecha) { // Defensive check
+            return null;
+        }
         const announcement: Announcement = { id: docSnapshot.id, ...data } as Announcement;
         
         if (data.autor) {
-          const authorDoc = await getDoc(doc(db, "users", data.autor));
-          if (authorDoc.exists()) {
-            announcement.autorNombre = (authorDoc.data() as BandUser).nombreCompleto;
+          try {
+            const authorDoc = await getDoc(doc(db, "users", data.autor));
+            if (authorDoc.exists()) {
+              announcement.autorNombre = (authorDoc.data() as BandUser).nombreCompleto;
+            }
+          } catch (e) {
+            console.warn("Could not fetch author for announcement", announcement.id)
           }
         }
         return announcement;
       });
 
-      const announcementsData = await Promise.all(authorPromises);
+      const announcementsData = (await Promise.all(authorPromises)).filter(Boolean) as Announcement[];
       setAnnouncements(announcementsData);
       setLoading(false);
     }, (error) => {
