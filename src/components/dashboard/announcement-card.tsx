@@ -56,7 +56,10 @@ export function AnnouncementCard({ announcement, canManage, onEdit, onDelete, cl
         </CardDescription>
       </CardHeader>
       <CardContent className="flex-grow">
-        <p className="text-sm text-muted-foreground line-clamp-3">{contenido}</p>
+        <div 
+          className="text-sm text-muted-foreground line-clamp-3 prose dark:prose-invert prose-sm max-w-none"
+          dangerouslySetInnerHTML={{ __html: contenido }}
+        />
       </CardContent>
        <CardFooter className="flex justify-end gap-2">
             {canManage && (

@@ -14,7 +14,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/hooks/use-auth";
 import type { Announcement } from "@/lib/types";
@@ -26,10 +25,11 @@ import { useState, useRef } from "react";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { Progress } from "@/components/ui/progress";
 import Image from "next/image";
+import { RichTextEditor } from "../ui/rich-text-editor";
 
 const formSchema = z.object({
   titulo: z.string().min(5, "El título debe tener al menos 5 caracteres."),
-  contenido: z.string().min(10, "El contenido debe tener al menos 10 caracteres."),
+  contenido: z.string().min(20, "El contenido debe tener al menos 20 caracteres."),
   importancia: z.enum(["baja", "normal", "alta"]),
   imageUrl: z.string().url("Debe ser una URL de imagen válida.").optional().or(z.literal("")),
 });
@@ -144,6 +144,12 @@ export function AnnouncementForm({ announcement, onFinished }: AnnouncementFormP
         setUploadProgress(null);
     }
   }
+  
+  const importanceColorClass = {
+    alta: "border-red-500/50 focus-within:border-red-500",
+    normal: "border-border",
+    baja: "border-blue-500/50 focus-within:border-blue-500",
+  }[form.watch('importancia')]
 
   return (
     <Form {...form}>
@@ -161,6 +167,30 @@ export function AnnouncementForm({ announcement, onFinished }: AnnouncementFormP
             </FormItem>
           )}
         />
+
+        <FormField
+          control={form.control}
+          name="importancia"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Importancia</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isSubmitting}>
+                <FormControl>
+                  <SelectTrigger className={importanceColorClass}>
+                    <SelectValue placeholder="Selecciona un nivel de importancia" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="baja">Baja</SelectItem>
+                  <SelectItem value="normal">Normal</SelectItem>
+                  <SelectItem value="alta">Alta</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
         <FormField
           control={form.control}
           name="contenido"
@@ -168,7 +198,10 @@ export function AnnouncementForm({ announcement, onFinished }: AnnouncementFormP
             <FormItem>
               <FormLabel>Contenido</FormLabel>
               <FormControl>
-                <Textarea placeholder="Escribe el contenido del anuncio aquí..." {...field} rows={5} disabled={isSubmitting}/>
+                <RichTextEditor 
+                  className={importanceColorClass} 
+                  {...field} 
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -221,28 +254,6 @@ export function AnnouncementForm({ announcement, onFinished }: AnnouncementFormP
         </div>
 
 
-        <FormField
-          control={form.control}
-          name="importancia"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Importancia</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isSubmitting}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecciona un nivel de importancia" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="baja">Baja</SelectItem>
-                  <SelectItem value="normal">Normal</SelectItem>
-                  <SelectItem value="alta">Alta</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <Button type="submit" disabled={isSubmitting}>
            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
            {announcement ? "Actualizar Anuncio" : "Crear Anuncio"}
