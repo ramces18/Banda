@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -18,9 +19,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useAuth } from "@/hooks/use-auth";
 import type { Announcement } from "@/lib/types";
 import { addDoc, collection, doc, serverTimestamp, updateDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { db, storage } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
+import { Image as ImageIcon, Loader2, UploadCloud, X } from "lucide-react";
+import { useState, useRef } from "react";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { Progress } from "@/components/ui/progress";
+import Image from "next/image";
 
 const formSchema = z.object({
   titulo: z.string().min(5, "El título debe tener al menos 5 caracteres."),
@@ -37,6 +42,11 @@ interface AnnouncementFormProps {
 export function AnnouncementForm({ announcement, onFinished }: AnnouncementFormProps) {
   const { bandUser } = useAuth();
   const { toast } = useToast();
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(announcement?.imageUrl || null);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -49,37 +59,95 @@ export function AnnouncementForm({ announcement, onFinished }: AnnouncementFormP
 
   const { isSubmitting } = form.formState;
 
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+      form.setValue("imageUrl", ""); // Clear previous URL if a new file is selected
+    }
+  };
+
+  const handleRemoveImage = () => {
+      setImageFile(null);
+      setImagePreview(null);
+      form.setValue("imageUrl", "");
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+  }
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (!bandUser) {
       toast({ variant: "destructive", description: "No estás autenticado." });
       return;
     }
 
+    let finalImageUrl = announcement?.imageUrl || "";
+
     try {
+      if (imageFile) {
+        // Upload new image
+        const storageRef = ref(storage, `announcements/${Date.now()}_${imageFile.name}`);
+        const uploadTask = uploadBytesResumable(storageRef, imageFile);
+
+        finalImageUrl = await new Promise((resolve, reject) => {
+          uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              setUploadProgress(progress);
+            },
+            (error) => {
+              console.error("Upload failed", error);
+              reject("Error al subir la imagen.");
+            },
+            async () => {
+              const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+              resolve(downloadURL);
+            }
+          );
+        });
+      } else if (!imagePreview) {
+          // If image was removed, ensure URL is empty
+          finalImageUrl = "";
+      }
+
+
+      const dataToSave = {
+        ...values,
+        imageUrl: finalImageUrl,
+      };
+      
       if (announcement) {
-        // Update existing
         const announcementRef = doc(db, "announcements", announcement.id);
-        await updateDoc(announcementRef, values);
+        await updateDoc(announcementRef, dataToSave);
         toast({ description: "Anuncio actualizado correctamente." });
       } else {
-        // Create new
         await addDoc(collection(db, "announcements"), {
-          ...values,
+          ...dataToSave,
           autor: bandUser.id,
           fecha: serverTimestamp(),
         });
         toast({ description: "Anuncio creado correctamente." });
       }
       onFinished();
+
     } catch (error) {
       console.error("Error submitting form: ", error);
       toast({ variant: "destructive", description: "Ocurrió un error al guardar el anuncio." });
+    } finally {
+        setUploadProgress(null);
     }
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
           name="titulo"
@@ -87,7 +155,7 @@ export function AnnouncementForm({ announcement, onFinished }: AnnouncementFormP
             <FormItem>
               <FormLabel>Título</FormLabel>
               <FormControl>
-                <Input placeholder="Título del anuncio" {...field} />
+                <Input placeholder="Título del anuncio" {...field} disabled={isSubmitting}/>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -100,32 +168,58 @@ export function AnnouncementForm({ announcement, onFinished }: AnnouncementFormP
             <FormItem>
               <FormLabel>Contenido</FormLabel>
               <FormControl>
-                <Textarea placeholder="Escribe el contenido del anuncio aquí..." {...field} rows={5} />
+                <Textarea placeholder="Escribe el contenido del anuncio aquí..." {...field} rows={5} disabled={isSubmitting}/>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="imageUrl"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>URL de la Imagen (Opcional)</FormLabel>
-              <FormControl>
-                <Input placeholder="https://ejemplo.com/imagen.jpg" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+         <div className="space-y-2">
+            <FormLabel>Imagen del Anuncio (Opcional)</FormLabel>
+            {imagePreview ? (
+                <div className="relative group w-full aspect-video rounded-md overflow-hidden">
+                    <Image src={imagePreview} alt="Vista previa" fill className="object-cover"/>
+                    {!isSubmitting && (
+                        <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Button type="button" size="icon" variant="destructive" onClick={handleRemoveImage}>
+                                <X className="h-5 w-5"/>
+                                <span className="sr-only">Eliminar imagen</span>
+                            </Button>
+                        </div>
+                    )}
+                </div>
+            ) : (
+                <div
+                    className="flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-md cursor-pointer hover:bg-muted/50 transition-colors"
+                    onClick={() => fileInputRef.current?.click()}
+                >
+                    <UploadCloud className="h-10 w-10 text-muted-foreground"/>
+                    <p className="mt-2 text-sm text-muted-foreground">Haz clic para subir una imagen</p>
+                    <p className="text-xs text-muted-foreground">PNG, JPG, GIF hasta 5MB</p>
+                    <Input 
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                        className="hidden"
+                        accept="image/png, image/jpeg, image/gif"
+                        disabled={isSubmitting}
+                    />
+                </div>
+            )}
+             {uploadProgress !== null && (
+                <div className="space-y-1">
+                    <Progress value={uploadProgress} className="w-full" />
+                    <p className="text-xs text-muted-foreground text-center">Subiendo... {Math.round(uploadProgress)}%</p>
+                </div>
+            )}
+        </div>
         <FormField
           control={form.control}
           name="importancia"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Importancia</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isSubmitting}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Selecciona un nivel de importancia" />
