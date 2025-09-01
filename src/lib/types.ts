@@ -7,6 +7,7 @@ export interface BandUser {
   rol: 'lider' | 'dirigente' | 'miembro';
   fechaRegistro: Timestamp;
   avatarStyle?: string; // e.g., 'micah', 'adventurer', etc.
+  fcmTokens?: string[]; // For push notifications
 }
 
 export interface Announcement {

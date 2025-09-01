@@ -15,24 +15,28 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/hooks/use-auth";
 import type { Announcement } from "@/lib/types";
 import { addDoc, collection, doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { db, storage } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
-import { ImageIcon, Loader2, X } from "lucide-react";
+import { ImageIcon, Loader2, X, Bell } from "lucide-react";
 import { useState, useRef } from "react";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { Progress } from "@/components/ui/progress";
 import Image from "next/image";
-import { Textarea } from "../ui/textarea";
+import { Switch } from "../ui/switch";
+import { sendNotificationFlow } from "@/ai/flows/send-notifications-flow";
+
 
 const formSchema = z.object({
   titulo: z.string().min(5, "El título debe tener al menos 5 caracteres."),
   contenido: z.string().min(20, "El contenido debe tener al menos 20 caracteres."),
   importancia: z.enum(["baja", "normal", "alta"]),
   imageUrl: z.string().url("Debe ser una URL de imagen válida.").optional().or(z.literal("")),
+  sendNotification: z.boolean().default(true),
 });
 
 interface AnnouncementFormProps {
@@ -55,6 +59,7 @@ export function AnnouncementForm({ announcement, onFinished }: AnnouncementFormP
       contenido: announcement?.contenido || "",
       importancia: announcement?.importancia || "normal",
       imageUrl: announcement?.imageUrl || "",
+      sendNotification: true,
     },
   });
 
@@ -92,7 +97,6 @@ export function AnnouncementForm({ announcement, onFinished }: AnnouncementFormP
 
     try {
       if (imageFile) {
-        // Upload new image
         const storageRef = ref(storage, `announcements/${Date.now()}_${imageFile.name}`);
         const uploadTask = uploadBytesResumable(storageRef, imageFile);
 
@@ -114,28 +118,42 @@ export function AnnouncementForm({ announcement, onFinished }: AnnouncementFormP
           );
         });
       } else if (!imagePreview) {
-          // If image was removed, ensure URL is empty
           finalImageUrl = "";
       }
 
-
       const dataToSave = {
-        ...values,
+        titulo: values.titulo,
+        contenido: values.contenido,
+        importancia: values.importancia,
         imageUrl: finalImageUrl,
       };
+      
+      let newAnnouncementId: string | null = null;
       
       if (announcement) {
         const announcementRef = doc(db, "announcements", announcement.id);
         await updateDoc(announcementRef, dataToSave);
         toast({ description: "Anuncio actualizado correctamente." });
       } else {
-        await addDoc(collection(db, "announcements"), {
+        const docRef = await addDoc(collection(db, "announcements"), {
           ...dataToSave,
           autor: bandUser.id,
           fecha: serverTimestamp(),
         });
+        newAnnouncementId = docRef.id;
         toast({ description: "Anuncio creado correctamente." });
       }
+      
+      if (values.sendNotification && (newAnnouncementId || announcement?.id)) {
+          toast({ description: "Enviando notificaciones..." });
+          await sendNotificationFlow({
+              title: values.titulo,
+              body: values.contenido,
+              announcementId: newAnnouncementId ?? announcement!.id
+          })
+          toast({ description: "Notificaciones enviadas." });
+      }
+
       onFinished();
 
     } catch (error) {
@@ -199,8 +217,9 @@ export function AnnouncementForm({ announcement, onFinished }: AnnouncementFormP
             <FormItem>
               <FormLabel>Contenido</FormLabel>
               <FormControl>
-                <Textarea 
-                  className={importanceColorClass} 
+                <Textarea
+                  placeholder="Escribe el contenido del anuncio aquí..."
+                  className={importanceColorClass}
                   {...field}
                   rows={6}
                 />
@@ -254,6 +273,29 @@ export function AnnouncementForm({ announcement, onFinished }: AnnouncementFormP
             Puedes añadir una imagen opcional para tu anuncio.
           </FormDescription>
         </div>
+        
+        {!announcement && (
+             <FormField
+                control={form.control}
+                name="sendNotification"
+                render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                        <div className="space-y-0.5">
+                            <FormLabel className="text-base">Enviar Notificación</FormLabel>
+                            <FormDescription>
+                                ¿Enviar una notificación push a todos los miembros sobre este nuevo anuncio?
+                            </FormDescription>
+                        </div>
+                        <FormControl>
+                            <Switch
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            />
+                        </FormControl>
+                    </FormItem>
+                )}
+            />
+        )}
 
 
         <Button type="submit" disabled={isSubmitting}>

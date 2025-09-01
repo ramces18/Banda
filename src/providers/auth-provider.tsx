@@ -10,6 +10,7 @@ import { createContext, useEffect, useState, useCallback } from "react";
 
 import { auth, db } from "@/lib/firebase";
 import type { BandUser } from "@/lib/types";
+import { initializeFirebaseMessaging } from "@/lib/firebase-messaging";
 
 interface AuthContextType {
   user: User | null;
@@ -40,6 +41,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
              if (pathname === '/login' || pathname === '/') {
                 router.replace('/dashboard/home');
             }
+            // Initialize messaging and get token
+            initializeFirebaseMessaging(user.uid);
           } else {
             console.warn(`No user document found in Firestore for UID: ${user.uid}`);
             setBandUser(null);
