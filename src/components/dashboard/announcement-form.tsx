@@ -21,7 +21,7 @@ import type { Announcement } from "@/lib/types";
 import { addDoc, collection, doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import { db, storage } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
-import { Image as ImageIcon, Loader2, UploadCloud, X } from "lucide-react";
+import { ImageIcon, Loader2, X } from "lucide-react";
 import { useState, useRef } from "react";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { Progress } from "@/components/ui/progress";
@@ -174,45 +174,53 @@ export function AnnouncementForm({ announcement, onFinished }: AnnouncementFormP
             </FormItem>
           )}
         />
-         <div className="space-y-2">
-            <FormLabel>Imagen del Anuncio (Opcional)</FormLabel>
-            {imagePreview ? (
-                <div className="relative group w-full aspect-video rounded-md overflow-hidden">
-                    <Image src={imagePreview} alt="Vista previa" fill className="object-cover"/>
-                    {!isSubmitting && (
-                        <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                            <Button type="button" size="icon" variant="destructive" onClick={handleRemoveImage}>
-                                <X className="h-5 w-5"/>
-                                <span className="sr-only">Eliminar imagen</span>
-                            </Button>
-                        </div>
-                    )}
-                </div>
-            ) : (
-                <div
-                    className="flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-md cursor-pointer hover:bg-muted/50 transition-colors"
-                    onClick={() => fileInputRef.current?.click()}
-                >
-                    <UploadCloud className="h-10 w-10 text-muted-foreground"/>
-                    <p className="mt-2 text-sm text-muted-foreground">Haz clic para subir una imagen</p>
-                    <p className="text-xs text-muted-foreground">PNG, JPG, GIF hasta 5MB</p>
-                    <Input 
-                        type="file"
-                        ref={fileInputRef}
-                        onChange={handleFileChange}
-                        className="hidden"
-                        accept="image/png, image/jpeg, image/gif"
-                        disabled={isSubmitting}
-                    />
-                </div>
-            )}
-             {uploadProgress !== null && (
-                <div className="space-y-1">
-                    <Progress value={uploadProgress} className="w-full" />
-                    <p className="text-xs text-muted-foreground text-center">Subiendo... {Math.round(uploadProgress)}%</p>
-                </div>
-            )}
+        
+        <div className="space-y-4">
+          <FormLabel>Imagen del Anuncio (Opcional)</FormLabel>
+          {imagePreview && (
+            <div className="relative w-full aspect-video rounded-md overflow-hidden">
+                <Image src={imagePreview} alt="Vista previa" fill className="object-cover"/>
+                {!isSubmitting && (
+                    <Button 
+                      type="button" 
+                      size="icon" 
+                      variant="destructive" 
+                      onClick={handleRemoveImage} 
+                      className="absolute top-2 right-2 h-7 w-7 rounded-full"
+                    >
+                        <X className="h-4 w-4"/>
+                        <span className="sr-only">Eliminar imagen</span>
+                    </Button>
+                )}
+            </div>
+          )}
+
+          <div className="flex items-center gap-2">
+             <Button type="button" variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} disabled={isSubmitting}>
+                <ImageIcon className="mr-2 h-4 w-4" />
+                {imagePreview ? 'Cambiar Imagen' : 'Seleccionar Imagen'}
+            </Button>
+            <Input 
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                className="hidden"
+                accept="image/png, image/jpeg, image/gif"
+                disabled={isSubmitting}
+            />
+          </div>
+           {uploadProgress !== null && (
+              <div className="space-y-1">
+                  <Progress value={uploadProgress} className="w-full" />
+                  <p className="text-xs text-muted-foreground text-center">Subiendo... {Math.round(uploadProgress)}%</p>
+              </div>
+          )}
+          <FormDescription>
+            Puedes añadir una imagen opcional para tu anuncio.
+          </FormDescription>
         </div>
+
+
         <FormField
           control={form.control}
           name="importancia"
