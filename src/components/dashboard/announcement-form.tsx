@@ -128,10 +128,11 @@ export function AnnouncementForm({ announcement, onFinished }: AnnouncementFormP
         imageUrl: finalImageUrl,
       };
       
-      let newAnnouncementId: string | null = null;
+      let announcementId: string;
       
       if (announcement) {
-        const announcementRef = doc(db, "announcements", announcement.id);
+        announcementId = announcement.id;
+        const announcementRef = doc(db, "announcements", announcementId);
         await updateDoc(announcementRef, dataToSave);
         toast({ description: "Anuncio actualizado correctamente." });
       } else {
@@ -140,21 +141,27 @@ export function AnnouncementForm({ announcement, onFinished }: AnnouncementFormP
           autor: bandUser.id,
           fecha: serverTimestamp(),
         });
-        newAnnouncementId = docRef.id;
+        announcementId = docRef.id;
         toast({ description: "Anuncio creado correctamente." });
       }
       
-      if (values.sendNotification && (newAnnouncementId || announcement?.id)) {
-          toast({ description: "Enviando notificaciones..." });
-          await sendNotificationFlow({
-              title: values.titulo,
-              body: values.contenido,
-              announcementId: newAnnouncementId ?? announcement!.id
-          })
-          toast({ description: "Notificaciones enviadas." });
-      }
-
       onFinished();
+
+      // Send notification after form is finished and toast is shown
+      if (values.sendNotification) {
+          try {
+            toast({ description: "Enviando notificaciones..." });
+            const result = await sendNotificationFlow({
+                title: values.titulo,
+                body: values.contenido,
+                announcementId: announcementId
+            });
+            toast({ description: `Se enviaron ${result.successCount} notificaciones.` });
+          } catch(e) {
+              console.error("Error sending notification flow", e);
+              toast({ variant: "destructive", description: "No se pudieron enviar las notificaciones." });
+          }
+      }
 
     } catch (error) {
       console.error("Error submitting form: ", error);
@@ -222,6 +229,7 @@ export function AnnouncementForm({ announcement, onFinished }: AnnouncementFormP
                   className={importanceColorClass}
                   {...field}
                   rows={6}
+                  disabled={isSubmitting}
                 />
               </FormControl>
               <FormMessage />
@@ -290,6 +298,7 @@ export function AnnouncementForm({ announcement, onFinished }: AnnouncementFormP
                             <Switch
                             checked={field.value}
                             onCheckedChange={field.onChange}
+                            disabled={isSubmitting}
                             />
                         </FormControl>
                     </FormItem>
