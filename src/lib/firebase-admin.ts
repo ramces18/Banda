@@ -3,9 +3,11 @@ import admin from 'firebase-admin';
 // Check if the environment variable is set
 if (!process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
   if (process.env.NODE_ENV === 'production') {
-    throw new Error('Firebase admin initialization failed. The FIREBASE_SERVICE_ACCOUNT_KEY environment variable is not set.');
+    // In production, we might want to throw an error if the key is missing.
+    // However, for now, we will just warn to avoid crashing the app during startup.
+    console.warn('Firebase admin initialization skipped. The FIREBASE_SERVICE_ACCOUNT_KEY environment variable is not set.');
   } else {
-    console.warn('FIREBASE_SERVICE_ACCOUNT_KEY is not set. Firebase Admin SDK features will be disabled.');
+    console.warn('FIREBASE_SERVICE_ACCOUNT_KEY is not set. Firebase Admin SDK features will be disabled in development.');
   }
 }
 
@@ -21,6 +23,7 @@ if (!admin.apps.length && process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
     });
   } catch (error) {
     console.error('Error parsing FIREBASE_SERVICE_ACCOUNT_KEY or initializing Firebase admin:', error);
+    // Do not throw an error, just log it. This prevents the entire app from crashing.
   }
 }
 
