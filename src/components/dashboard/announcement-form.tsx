@@ -26,7 +26,7 @@ import { useState, useRef } from "react";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { Progress } from "@/components/ui/progress";
 import Image from "next/image";
-import { RichTextEditor } from "../ui/rich-text-editor";
+import { Textarea } from "../ui/textarea";
 
 const formSchema = z.object({
   titulo: z.string().min(5, "El título debe tener al menos 5 caracteres."),
@@ -199,10 +199,10 @@ export function AnnouncementForm({ announcement, onFinished }: AnnouncementFormP
             <FormItem>
               <FormLabel>Contenido</FormLabel>
               <FormControl>
-                <RichTextEditor 
+                <Textarea 
                   className={importanceColorClass} 
-                  {...field} 
-                  ref={null}
+                  {...field}
+                  rows={6}
                 />
               </FormControl>
               <FormMessage />

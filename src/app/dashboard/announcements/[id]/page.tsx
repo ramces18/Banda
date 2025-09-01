@@ -127,9 +127,10 @@ export default function AnnouncementDetailPage() {
       <Card className="shadow-lg">
         <CardContent className="pt-6">
             <div 
-                className="prose prose-lg dark:prose-invert max-w-none"
-                dangerouslySetInnerHTML={{ __html: announcement.contenido }}
-             />
+                className="prose prose-lg dark:prose-invert max-w-none whitespace-pre-wrap"
+             >
+                {announcement.contenido}
+             </div>
         </CardContent>
       </Card>
     </div>
