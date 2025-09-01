@@ -4,7 +4,7 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD6JnK3wAMmSUgJoaiYORVFIhX0mXAmLyI",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: "banda-b4fc5.firebaseapp.com",
   projectId: "banda-b4fc5",
   storageBucket: "banda-b4fc5.appspot.com",
