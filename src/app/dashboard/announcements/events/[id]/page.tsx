@@ -13,6 +13,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
+export const dynamic = 'force-dynamic';
+
 export default function EventDetailPage() {
   const { id } = useParams();
   const [event, setEvent] = useState<Event | null>(null);

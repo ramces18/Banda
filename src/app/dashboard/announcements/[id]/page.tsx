@@ -14,6 +14,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
+export const dynamic = 'force-dynamic';
+
 const importanceMap = {
   alta: { label: "Alta", variant: "destructive" as const },
   normal: { label: "Normal", variant: "secondary" as const },

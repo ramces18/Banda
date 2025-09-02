@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
@@ -15,6 +14,8 @@ import { NewReplyForm } from "@/components/forum/new-reply-form";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { handleReport } from "@/lib/reports";
+
+export const dynamic = 'force-dynamic';
 
 export default function TopicDetailPage() {
   const { topicId } = useParams();
