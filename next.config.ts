@@ -49,7 +49,7 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
       {
-        protocol: 'httpshttps',
+        protocol: 'https',
         hostname: 'pleybast.com',
         port: '',
         pathname: '/**',
