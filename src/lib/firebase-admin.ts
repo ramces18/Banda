@@ -1,3 +1,4 @@
+
 import admin from 'firebase-admin';
 
 // Check if the environment variable is set
