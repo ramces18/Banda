@@ -1,7 +1,8 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useParams } from "next/navigation";
 import type { Event } from "@/lib/types";
@@ -13,7 +14,17 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+export async function generateStaticParams() {
+  const eventsCol = collection(db, 'events');
+  const eventsSnapshot = await getDocs(eventsCol);
+  const events = eventsSnapshot.docs.map(doc => ({ id: doc.id }));
+
+  return events.map((event) => ({
+    id: event.id,
+  }));
+}
 
 export default function EventDetailPage() {
   const { id } = useParams();

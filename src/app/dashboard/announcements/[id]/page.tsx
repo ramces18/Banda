@@ -1,7 +1,8 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useParams } from "next/navigation";
 import type { Announcement, BandUser } from "@/lib/types";
@@ -14,7 +15,17 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+export async function generateStaticParams() {
+  const announcementsCol = collection(db, 'announcements');
+  const announcementsSnapshot = await getDocs(announcementsCol);
+  const announcements = announcementsSnapshot.docs.map(doc => ({ id: doc.id }));
+
+  return announcements.map((announcement) => ({
+    id: announcement.id,
+  }));
+}
 
 const importanceMap = {
   alta: { label: "Alta", variant: "destructive" as const },

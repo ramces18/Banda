@@ -1,8 +1,9 @@
+
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { collection, doc, onSnapshot, orderBy, query, deleteDoc, runTransaction } from "firebase/firestore";
+import { collection, doc, onSnapshot, orderBy, query, deleteDoc, runTransaction, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import type { ForumPost, ForumTopic } from "@/lib/types";
 import { useAuth } from "@/hooks/use-auth";
@@ -15,7 +16,17 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { useToast } from "@/hooks/use-toast";
 import { handleReport } from "@/lib/reports";
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+export async function generateStaticParams() {
+  const topicsCol = collection(db, 'forumTopics');
+  const topicsSnapshot = await getDocs(topicsCol);
+  const topics = topicsSnapshot.docs.map(doc => ({ id: doc.id }));
+
+  return topics.map((topic) => ({
+    topicId: topic.id,
+  }));
+}
 
 export default function TopicDetailPage() {
   const { topicId } = useParams();
