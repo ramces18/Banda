@@ -27,8 +27,8 @@ export function TopicDetailClient({ initialTopic, initialPosts }: TopicDetailCli
   const { bandUser } = useAuth();
   const { toast } = useToast();
 
-  const [topic, setTopic] = useState<ForumTopic | null>(initialTopic);
-  const [posts, setPosts] = useState<ForumPost[]>(initialPosts);
+  const [topic, setTopic] = useState(initialTopic);
+  const [posts, setPosts] = useState<ForumPost[]>(initialPosts.map(p => ({ ...p, createdAt: p.createdAt ? new Date(p.createdAt) : new Date() } as any)));
   const [loading, setLoading] = useState(false);
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -36,7 +36,10 @@ export function TopicDetailClient({ initialTopic, initialPosts }: TopicDetailCli
 
   useEffect(() => {
     if (typeof topicId !== "string") return;
-    setLoading(true);
+
+    if (!initialTopic) {
+        setLoading(true);
+    }
 
     const topicRef = doc(db, "forumTopics", topicId);
     const unsubscribeTopic = onSnapshot(topicRef, (docSnap) => {
@@ -65,7 +68,7 @@ export function TopicDetailClient({ initialTopic, initialPosts }: TopicDetailCli
       unsubscribeTopic();
       unsubscribePosts();
     };
-  }, [topicId, router]);
+  }, [topicId, router, initialTopic]);
   
   const canManage = useMemo(() => {
     return bandUser?.rol === "lider" || bandUser?.rol === "dirigente";

@@ -11,6 +11,7 @@ import { Trash2, Flag } from "lucide-react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useEffect, useState } from "react";
+import type { Timestamp } from "firebase/firestore";
 
 interface PostCardProps {
   post: ForumPost;
@@ -44,6 +45,8 @@ export function PostCard({ post, canManage, onDelete, onReport }: PostCardProps)
     }
     fetchAuthorAvatar();
   }, [authorId]);
+  
+  const date = (createdAt as Timestamp)?.toDate ? (createdAt as Timestamp).toDate() : new Date(createdAt as string);
 
   return (
     <Card>
@@ -56,7 +59,7 @@ export function PostCard({ post, canManage, onDelete, onReport }: PostCardProps)
           <span className="font-semibold">{authorName}</span>
         </div>
         <p className="text-xs text-muted-foreground">
-          {createdAt ? formatDistanceToNow(createdAt.toDate(), { locale: es, addSuffix: true }) : ''}
+          {date ? formatDistanceToNow(date, { locale: es, addSuffix: true }) : ''}
         </p>
       </CardHeader>
       <CardContent className="p-4">
