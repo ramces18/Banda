@@ -38,6 +38,14 @@ jobs:
         env:
           GITHUB_ACTIONS: true
         run: npm run build
+      - name: Static HTML export with 404 page
+        run: |
+          cp out/index.html out/404.html
+          # Add a script to the 404 page to redirect to the correct path
+          echo '<script>
+            sessionStorage.redirect = location.href;
+          </script>
+          <meta http-equiv="refresh" content="0;URL=/nextn"></meta>' >> out/404.html
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

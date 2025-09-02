@@ -50,12 +50,6 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'pleybast.com',
-        port: '',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
         hostname: 'media.discordapp.net',
         port: '',
         pathname: '/**',
