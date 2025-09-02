@@ -15,7 +15,7 @@ export interface Announcement {
   id: string;
   titulo: string;
   contenido: string;
-  fecha: Timestamp | string;
+  fecha: Timestamp | string | Date;
   autor: string; // UID of author
   autorNombre?: string; // To display author name
   importancia: 'normal' | 'alta' | 'baja';
@@ -26,7 +26,7 @@ export interface Event {
   id: string;
   title: string;
   description: string;
-  date: Timestamp | string;
+  date: Timestamp | string | Date;
   type: 'Ensayo' | 'Acto Cívico' | 'Desfile' | 'Presentación' | 'Otro';
   createdBy: string; // UID of user who created it
 }
@@ -37,8 +37,8 @@ export interface ForumTopic {
     title: string;
     authorId: string;
     authorName: string;
-    createdAt: Timestamp | string;
-    lastReplyAt: Timestamp | string;
+    createdAt: Timestamp | string | Date;
+    lastReplyAt: Timestamp | string | Date;
     replyCount: number;
 }
 
@@ -48,7 +48,7 @@ export interface ForumPost {
     authorId: string;
     authorName: string;
     content: string;
-    createdAt: Timestamp | string;
+    createdAt: Timestamp | string | Date;
 }
 
 export interface Report {
