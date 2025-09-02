@@ -51,7 +51,7 @@ export const RichTextEditor = React.forwardRef<any, RichTextEditorProps>(
              className
         )}>
             <ReactQuill
-                forwardedRef={ref}
+                ref={ref}
                 theme="snow"
                 value={value}
                 onChange={onChange}
