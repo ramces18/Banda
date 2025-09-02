@@ -1,3 +1,4 @@
+
 import type { Timestamp } from 'firebase/firestore';
 
 export interface BandUser {
@@ -5,7 +6,7 @@ export interface BandUser {
   username: string;
   nombreCompleto: string;
   rol: 'lider' | 'dirigente' | 'miembro';
-  fechaRegistro: Timestamp;
+  fechaRegistro: Timestamp | string;
   avatarStyle?: string; // e.g., 'micah', 'adventurer', etc.
   fcmTokens?: string[]; // For push notifications
 }
@@ -14,7 +15,7 @@ export interface Announcement {
   id: string;
   titulo: string;
   contenido: string;
-  fecha: Timestamp;
+  fecha: Timestamp | string;
   autor: string; // UID of author
   autorNombre?: string; // To display author name
   importancia: 'normal' | 'alta' | 'baja';
@@ -25,7 +26,7 @@ export interface Event {
   id: string;
   title: string;
   description: string;
-  date: Timestamp;
+  date: Timestamp | string;
   type: 'Ensayo' | 'Acto Cívico' | 'Desfile' | 'Presentación' | 'Otro';
   createdBy: string; // UID of user who created it
 }
@@ -36,8 +37,8 @@ export interface ForumTopic {
     title: string;
     authorId: string;
     authorName: string;
-    createdAt: Timestamp;
-    lastReplyAt: Timestamp;
+    createdAt: Timestamp | string;
+    lastReplyAt: Timestamp | string;
     replyCount: number;
 }
 
@@ -47,7 +48,7 @@ export interface ForumPost {
     authorId: string;
     authorName: string;
     content: string;
-    createdAt: Timestamp;
+    createdAt: Timestamp | string;
 }
 
 export interface Report {
