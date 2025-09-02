@@ -43,15 +43,13 @@ const formats = [
     'link', 'color', 'background'
 ];
 
-export const RichTextEditor = React.forwardRef<any, RichTextEditorProps>(
-  ({ value, onChange, className, ...props }, ref) => {
+export const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, className, ...props }) => {
     return (
         <div className={cn(
             "bg-background rounded-md border border-input text-sm ring-offset-background focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2",
              className
         )}>
             <ReactQuill
-                ref={ref}
                 theme="snow"
                 value={value}
                 onChange={onChange}
@@ -62,7 +60,6 @@ export const RichTextEditor = React.forwardRef<any, RichTextEditorProps>(
             />
         </div>
     );
-  }
-);
+};
 
 RichTextEditor.displayName = "RichTextEditor";
