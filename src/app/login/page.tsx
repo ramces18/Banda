@@ -13,7 +13,6 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { AlertCircle, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Logo } from "@/components/logo";
 import { useAuth } from "@/hooks/use-auth";
 import Link from "next/link";
 
@@ -73,7 +72,6 @@ export default function LoginPage() {
   if (authLoading) {
       return (
          <div className="flex h-screen w-full flex-col items-center justify-center space-y-6">
-          <Logo />
           <div className="flex items-center space-x-2">
             <Loader2 className="h-6 w-6 animate-spin text-primary" />
             <p className="text-lg text-muted-foreground">Cargando...</p>
@@ -88,7 +86,7 @@ export default function LoginPage() {
       <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-background">
          <div className="w-full max-w-md mx-auto">
           <Link href="/" className="flex justify-center mb-8">
-            <Logo />
+             <span className="text-2xl font-semibold">La Banda del IDI</span>
           </Link>
           <Card className="shadow-2xl">
             <CardHeader className="text-center">
@@ -149,7 +147,6 @@ export default function LoginPage() {
   // Si ya está logueado, se muestra el loader de redirección al dashboard
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center space-y-6">
-      <Logo />
       <div className="flex items-center space-x-2">
         <Loader2 className="h-6 w-6 animate-spin text-primary" />
         <p className="text-lg text-muted-foreground">Redirigiendo al panel...</p>

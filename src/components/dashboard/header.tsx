@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useAuth } from "@/hooks/use-auth";
@@ -8,7 +9,6 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import Link from "next/link";
 import { Home, Megaphone, Users, Music, MessageSquare, CalendarClock, Map, Lightbulb } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { Logo } from "../logo";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 const navItems = [
@@ -54,7 +54,7 @@ export function Header() {
              <SheetHeader className="p-4 border-b">
                <SheetTitle>
                  <Link href="/">
-                    <Logo />
+                    <span className="text-xl font-semibold text-foreground whitespace-nowrap">La Banda del IDI</span>
                  </Link>
               </SheetTitle>
             </SheetHeader>

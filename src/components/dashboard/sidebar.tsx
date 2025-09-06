@@ -1,6 +1,6 @@
+
 "use client";
 
-import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { Home, LogOut, Megaphone, Users, Music, MessageSquare, CalendarClock, Map, Lightbulb } from "lucide-react";
@@ -28,7 +28,7 @@ export function Sidebar() {
     <aside className="hidden lg:flex flex-col w-64 border-r bg-card">
       <div className="p-4 border-b h-16 flex items-center">
          <Link href="/">
-            <Logo />
+            <span className="text-xl font-semibold text-foreground whitespace-nowrap">La Banda del IDI</span>
         </Link>
       </div>
       <nav className="flex-1 p-4 space-y-2">

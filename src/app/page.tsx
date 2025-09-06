@@ -3,7 +3,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Logo } from "@/components/logo";
 import { ArrowRight, BookOpen, MessageSquare, Music } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -30,7 +29,9 @@ export default function LandingPage() {
     return (
         <div className="flex flex-col min-h-screen bg-background text-foreground">
             <header className="px-4 lg:px-6 h-16 flex items-center justify-between border-b">
-                <Logo />
+                <Link href="/" className="flex items-center gap-3">
+                    <span className="text-xl font-semibold text-foreground whitespace-nowrap">La Banda del IDI</span>
+                </Link>
                 <Button asChild>
                     <Link href="/login">
                         Iniciar Sesión
