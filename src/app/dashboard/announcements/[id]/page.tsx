@@ -1,11 +1,16 @@
-
-
 import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { adminDb } from "@/lib/firebase-admin";
 import type { Announcement, BandUser } from "@/lib/types";
 import { AnnouncementDetailClient } from "@/components/dashboard/announcement-detail-client";
 
 export const revalidate = 0;
+
+// Define a simple, local type for the page props.
+interface Props {
+  params: {
+    id: string;
+  };
+}
 
 export async function generateStaticParams() {
   if (!adminDb) return [];
@@ -33,9 +38,14 @@ async function getAnnouncement(id: string): Promise<Announcement | null> {
             const announcementData: Announcement = { id: docSnap.id, ...data } as Announcement;
             
             if (data.autor) {
-                const authorDoc = await getDoc(doc(adminDb, "users", data.autor));
-                if (authorDoc.exists()) {
-                    announcementData.autorNombre = (authorDoc.data() as BandUser).nombreCompleto;
+                try {
+                  const authorDoc = await getDoc(doc(adminDb, "users", data.autor));
+                  if (authorDoc.exists()) {
+                      announcementData.autorNombre = (authorDoc.data() as BandUser).nombreCompleto;
+                  }
+                } catch (e) {
+                  console.warn(`Could not fetch author for announcement ${id}`, e);
+                  announcementData.autorNombre = "Desconocido";
                 }
             }
             // Firestore timestamps need to be converted to a serializable format for the client
@@ -53,8 +63,8 @@ async function getAnnouncement(id: string): Promise<Announcement | null> {
     }
 }
 
-// Apply the correct type to the page component
-export default async function AnnouncementDetailPage({ params }: { params: { id: string } }) {
+// Apply the correct type to the page component.
+export default async function AnnouncementDetailPage({ params }: Props) {
   const announcement = await getAnnouncement(params.id);
 
   return <AnnouncementDetailClient announcement={announcement} />;
