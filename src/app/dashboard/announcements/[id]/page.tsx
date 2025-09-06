@@ -7,8 +7,11 @@ import { AnnouncementDetailClient } from "@/components/dashboard/announcement-de
 
 export const revalidate = 0;
 
+// Correctly define the type for the page props
 interface PageProps {
-  params: { id: string };
+  params: {
+    id: string;
+  };
 }
 
 export async function generateStaticParams() {
@@ -57,7 +60,7 @@ async function getAnnouncement(id: string): Promise<Announcement | null> {
     }
 }
 
-
+// Apply the correct type to the page component
 export default async function AnnouncementDetailPage({ params }: PageProps) {
   const announcement = await getAnnouncement(params.id);
 
