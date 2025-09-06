@@ -1,10 +1,15 @@
 
+
 import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { adminDb } from "@/lib/firebase-admin";
 import type { Event } from "@/lib/types";
 import { EventDetailClient } from "@/components/dashboard/event-detail-client";
 
 export const revalidate = 0;
+
+interface PageProps {
+  params: { id: string };
+}
 
 export async function generateStaticParams() {
     if (!adminDb) return [];
@@ -43,7 +48,7 @@ async function getEvent(id: string): Promise<Event | null> {
     }
 }
 
-export default async function EventDetailPage({ params }: { params: { id: string } }) {
+export default async function EventDetailPage({ params }: PageProps) {
   const event = await getEvent(params.id);
 
   return <EventDetailClient event={event} />;

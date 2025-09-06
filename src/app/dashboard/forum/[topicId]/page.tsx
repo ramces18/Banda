@@ -1,10 +1,15 @@
 
+
 import { collection, doc, getDocs, orderBy, query, getDoc } from "firebase/firestore";
 import { adminDb } from "@/lib/firebase-admin";
 import type { ForumPost, ForumTopic } from "@/lib/types";
 import { TopicDetailClient } from "@/components/forum/topic-detail-client";
 
 export const revalidate = 0;
+
+interface PageProps {
+  params: { topicId: string };
+}
 
 export async function generateStaticParams() {
     if (!adminDb) return [];
@@ -53,7 +58,7 @@ async function getTopicData(topicId: string) {
 }
 
 
-export default async function TopicDetailPage({ params }: { params: { topicId: string } }) {
+export default async function TopicDetailPage({ params }: PageProps) {
     const { topic, posts } = await getTopicData(params.topicId);
     
     return <TopicDetailClient initialTopic={topic} initialPosts={posts} />;

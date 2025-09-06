@@ -1,10 +1,15 @@
 
+
 import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { adminDb } from "@/lib/firebase-admin";
 import type { Announcement, BandUser } from "@/lib/types";
 import { AnnouncementDetailClient } from "@/components/dashboard/announcement-detail-client";
 
 export const revalidate = 0;
+
+interface PageProps {
+  params: { id: string };
+}
 
 export async function generateStaticParams() {
   if (!adminDb) return [];
@@ -53,7 +58,7 @@ async function getAnnouncement(id: string): Promise<Announcement | null> {
 }
 
 
-export default async function AnnouncementDetailPage({ params }: { params: { id: string } }) {
+export default async function AnnouncementDetailPage({ params }: PageProps) {
   const announcement = await getAnnouncement(params.id);
 
   return <AnnouncementDetailClient announcement={announcement} />;
