@@ -7,10 +7,6 @@ import { EventDetailClient } from "@/components/dashboard/event-detail-client";
 
 export const revalidate = 0;
 
-interface PageProps {
-  params: { id: string };
-}
-
 export async function generateStaticParams() {
     if (!adminDb) return [];
     try {
@@ -48,7 +44,7 @@ async function getEvent(id: string): Promise<Event | null> {
     }
 }
 
-export default async function EventDetailPage({ params }: PageProps) {
+export default async function EventDetailPage({ params }: { params: { id: string } }) {
   const event = await getEvent(params.id);
 
   return <EventDetailClient event={event} />;

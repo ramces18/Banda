@@ -7,10 +7,6 @@ import { TopicDetailClient } from "@/components/forum/topic-detail-client";
 
 export const revalidate = 0;
 
-interface PageProps {
-  params: { topicId: string };
-}
-
 export async function generateStaticParams() {
     if (!adminDb) return [];
     try {
@@ -64,7 +60,7 @@ async function getTopicData(topicId: string) {
 }
 
 
-export default async function TopicDetailPage({ params }: PageProps) {
+export default async function TopicDetailPage({ params }: { params: { topicId: string } }) {
     const { topic, posts } = await getTopicData(params.topicId);
     
     return <TopicDetailClient initialTopic={topic} initialPosts={posts} />;
