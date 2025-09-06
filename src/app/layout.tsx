@@ -16,9 +16,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  console.log("RootLayout rendering");
+  
   return (
     <html lang="es" className={`dark ${inter.variable}`}>
       <body className="font-body antialiased">
+        <div id="root-check" style={{ display: 'none' }}>Layout loaded</div>
         <AuthProvider>
           {children}
         </AuthProvider>

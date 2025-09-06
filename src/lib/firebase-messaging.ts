@@ -6,9 +6,21 @@ import { doc, updateDoc, arrayUnion, serverTimestamp } from "firebase/firestore"
 
 export const initializeFirebaseMessaging = async (userId: string) => {
   try {
+    // Check if we're in a browser environment
+    if (typeof window === 'undefined') {
+      console.log("Firebase messaging skipped - not in browser environment");
+      return;
+    }
+
     // Check if Notification API is supported
     if (!("Notification" in window)) {
       console.log("This browser does not support desktop notification");
+      return;
+    }
+
+    // Check if service workers are supported
+    if (!('serviceWorker' in navigator)) {
+      console.log("Service workers not supported");
       return;
     }
 
@@ -52,5 +64,6 @@ export const initializeFirebaseMessaging = async (userId: string) => {
 
   } catch (error) {
     console.error("An error occurred while setting up notifications.", error);
+    // Don't throw the error, just log it to prevent breaking the app
   }
 };

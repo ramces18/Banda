@@ -13,7 +13,9 @@ const firebaseConfig = {
   measurementId: "G-KWMV6PNDFT"
 };
 
+console.log("Initializing Firebase...");
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+console.log("Firebase initialized successfully");
 
 const auth = getAuth(app);
 const db = getFirestore(app);

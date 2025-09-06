@@ -1,6 +1,7 @@
 
 "use client";
 
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, BookOpen, MessageSquare, Music } from "lucide-react";
@@ -26,6 +27,10 @@ const features = [
 ];
 
 export default function LandingPage() {
+    useEffect(() => {
+        console.log("Landing page loaded");
+    }, []);
+
     return (
         <div className="flex flex-col min-h-screen bg-background text-foreground">
             <header className="px-4 lg:px-6 h-16 flex items-center justify-between border-b">

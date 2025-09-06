@@ -29,8 +29,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
 
+  console.log("AuthProvider rendering, loading:", loading, "user:", !!user, "bandUser:", !!bandUser);
+
   useEffect(() => {
+    console.log("AuthProvider useEffect triggered");
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      console.log("Auth state changed:", !!user);
       setLoading(true);
       try {
         if (user) {
@@ -42,7 +46,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 router.replace('/dashboard/home');
             }
             // Initialize messaging and get token
-            initializeFirebaseMessaging(user.uid);
+            try {
+              initializeFirebaseMessaging(user.uid);
+            } catch (msgError) {
+              console.warn("Firebase messaging initialization failed:", msgError);
+            }
           } else {
             console.warn(`No user document found in Firestore for UID: ${user.uid}`);
             setBandUser(null);
@@ -63,6 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             router.replace('/login');
         }
       } finally {
+        console.log("Setting loading to false");
         setLoading(false);
       }
     });
