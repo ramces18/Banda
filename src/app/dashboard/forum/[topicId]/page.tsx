@@ -36,18 +36,24 @@ async function getTopicData(topicId: string) {
         const postsQuery = query(collection(adminDb, `forumTopics/${topicId}/posts`), orderBy("createdAt", "asc"));
         const postsSnapshot = await getDocs(postsQuery);
         const posts: ForumPost[] = [];
-        postsSnapshot.forEach(doc => {
-            posts.push({ id: doc.id, ...doc.data() } as ForumPost);
-        });
-
-        // Serialize timestamps
-        if (topic) {
-            if (topic.createdAt) topic.createdAt = (topic.createdAt.toDate() as any).toISOString();
-            if (topic.lastReplyAt) topic.lastReplyAt = (topic.lastReplyAt.toDate() as any).toISOString();
+        for (const postDoc of postsSnapshot.docs) {
+           const postData = { id: postDoc.id, ...postDoc.data() } as ForumPost;
+           
+           if (postData.createdAt && (postData.createdAt as any).toDate) {
+               postData.createdAt = (postData.createdAt as any).toDate().toISOString();
+           }
+           posts.push(postData);
         }
-        posts.forEach(post => {
-            if (post.createdAt) post.createdAt = (post.createdAt.toDate() as any).toISOString();
-        });
+
+        // Serialize timestamps for topic
+        if (topic) {
+            if (topic.createdAt && (topic.createdAt as any).toDate) {
+                topic.createdAt = (topic.createdAt as any).toDate().toISOString();
+            }
+            if (topic.lastReplyAt && (topic.lastReplyAt as any).toDate) {
+                topic.lastReplyAt = (topic.lastReplyAt as any).toDate().toISOString();
+            }
+        }
 
         return { topic, posts };
 

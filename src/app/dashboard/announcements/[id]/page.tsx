@@ -43,8 +43,8 @@ async function getAnnouncement(id: string): Promise<Announcement | null> {
                 }
             }
             // Firestore timestamps need to be converted to a serializable format for the client
-            if (announcementData.fecha) {
-              announcementData.fecha = (announcementData.fecha.toDate() as any).toISOString();
+            if (announcementData.fecha && (announcementData.fecha as any).toDate) {
+              announcementData.fecha = (announcementData.fecha as any).toDate().toISOString();
             }
             return announcementData;
         } else {

@@ -34,8 +34,8 @@ async function getEvent(id: string): Promise<Event | null> {
 
         if (docSnap.exists()) {
             const eventData = { id: docSnap.id, ...docSnap.data() } as Event;
-            if (eventData.date) {
-                eventData.date = (eventData.date.toDate() as any).toISOString();
+            if (eventData.date && (eventData.date as any).toDate) {
+                eventData.date = (eventData.date as any).toDate().toISOString();
             }
             return eventData;
         } else {

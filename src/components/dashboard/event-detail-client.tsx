@@ -21,10 +21,13 @@ export function EventDetailClient({ event: initialEvent }: EventDetailClientProp
 
   useEffect(() => {
     if (initialEvent) {
+       const date = typeof initialEvent.date === 'string'
+        ? new Date(initialEvent.date)
+        : initialEvent.date;
       setEvent({
         ...initialEvent,
-        date: initialEvent.date ? new Date(initialEvent.date) : new Date(),
-      } as any);
+        date,
+      } as Event);
       setLoading(false);
     }
   }, [initialEvent]);

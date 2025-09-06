@@ -28,11 +28,15 @@ export function AnnouncementDetailClient({ announcement: initialAnnouncement }: 
 
   useEffect(() => {
     if (initialAnnouncement) {
+      // Convert ISO string back to Date object on the client if it's a string
+      const date = typeof initialAnnouncement.fecha === 'string' 
+        ? new Date(initialAnnouncement.fecha) 
+        : initialAnnouncement.fecha;
+
       setAnnouncement({
         ...initialAnnouncement,
-        // Convert ISO string back to Date object on the client
-        fecha: initialAnnouncement.fecha ? new Date(initialAnnouncement.fecha) : new Date(),
-      } as any);
+        fecha: date,
+      } as Announcement);
       setLoading(false);
     }
   }, [initialAnnouncement]);

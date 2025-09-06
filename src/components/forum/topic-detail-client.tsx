@@ -21,15 +21,26 @@ interface TopicDetailClientProps {
     initialPosts: ForumPost[];
 }
 
+const deserializeDate = (date: any) => {
+    if (!date) return new Date();
+    if (typeof date === 'string') return new Date(date);
+    if (date.toDate) return date.toDate();
+    return date;
+}
+
 export function TopicDetailClient({ initialTopic, initialPosts }: TopicDetailClientProps) {
   const { topicId } = useParams();
   const router = useRouter();
   const { bandUser } = useAuth();
   const { toast } = useToast();
 
-  const [topic, setTopic] = useState(initialTopic);
-  const [posts, setPosts] = useState<ForumPost[]>(initialPosts.map(p => ({ ...p, createdAt: p.createdAt ? new Date(p.createdAt) : new Date() } as any)));
-  const [loading, setLoading] = useState(false);
+  const [topic, setTopic] = useState(initialTopic ? {
+      ...initialTopic,
+      createdAt: deserializeDate(initialTopic.createdAt),
+      lastReplyAt: deserializeDate(initialTopic.lastReplyAt),
+  } as ForumTopic : null);
+  const [posts, setPosts] = useState<ForumPost[]>(initialPosts.map(p => ({ ...p, createdAt: deserializeDate(p.createdAt) } as ForumPost)));
+  const [loading, setLoading] = useState(!initialTopic);
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [deletingPost, setDeletingPost] = useState<ForumPost | null>(null);
@@ -44,7 +55,13 @@ export function TopicDetailClient({ initialTopic, initialPosts }: TopicDetailCli
     const topicRef = doc(db, "forumTopics", topicId);
     const unsubscribeTopic = onSnapshot(topicRef, (docSnap) => {
       if (docSnap.exists()) {
-        setTopic({ id: docSnap.id, ...docSnap.data() } as ForumTopic);
+        const data = docSnap.data();
+        setTopic({ 
+            id: docSnap.id, 
+            ...data,
+            createdAt: deserializeDate(data.createdAt),
+            lastReplyAt: deserializeDate(data.lastReplyAt)
+        } as ForumTopic);
       } else {
         console.error("No such topic!");
         router.push("/dashboard/forum");
@@ -55,7 +72,12 @@ export function TopicDetailClient({ initialTopic, initialPosts }: TopicDetailCli
     const unsubscribePosts = onSnapshot(postsQuery, (querySnapshot) => {
       const postsData: ForumPost[] = [];
       querySnapshot.forEach((doc) => {
-        postsData.push({ id: doc.id, ...doc.data() } as ForumPost);
+        const data = doc.data();
+        postsData.push({ 
+            id: doc.id, 
+            ...data,
+            createdAt: deserializeDate(data.createdAt)
+        } as ForumPost);
       });
       setPosts(postsData);
       setLoading(false);
